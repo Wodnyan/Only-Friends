@@ -1,5 +1,6 @@
 <template>
-  <div>hello world</div>
+  <div>Home Page</div>
+  <router-link to="/auth/sign-up">Sign up</router-link>
 </template>
 
 <script lang="ts">

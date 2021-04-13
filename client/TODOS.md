@@ -1,0 +1,4 @@
+- [x] Login page
+- [x] Switch between login and sign up page
+- [ ] Hook for sign up
+- [ ] Hook for login
