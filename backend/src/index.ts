@@ -7,10 +7,16 @@ import { UserResolver } from "./resolvers/user";
 import { connection } from "./db";
 import dotenv from "dotenv";
 import express from "express";
+import redis from "redis";
+import session from "express-session";
+
+import connectRedis from "connect-redis";
 
 dotenv.config();
 
 (async () => {
+  const RedisStore = connectRedis(session);
+  const redisClient = redis.createClient();
   const orm = await connection();
   await orm.getMigrator().up();
 
@@ -19,10 +25,27 @@ dotenv.config();
       resolvers: [HelloResolver, UserResolver],
       validate: false,
     }),
-    context: () => ({ em: orm.em }),
+    context: ({ req, res }) => ({ em: orm.em, req, res }),
   });
 
   const app = express();
+
+  // Middlewares
+  app.use(
+    session({
+      name: "qid",
+      store: new RedisStore({ client: redisClient, disableTouch: true }),
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 365 * 5, // 5 years
+        secure: __prod__,
+        sameSite: "lax",
+        httpOnly: true,
+      },
+      saveUninitialized: false,
+      secret: "Change this",
+      resave: false,
+    })
+  );
 
   apolloServer.applyMiddleware({ app });
 
