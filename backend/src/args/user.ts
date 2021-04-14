@@ -26,3 +26,12 @@ export class UpdateUserArgs {
   @Field({ nullable: true })
   avatar?: string;
 }
+
+@ArgsType()
+export class LoginArgs {
+  @Field()
+  email: string;
+
+  @Field()
+  password: string;
+}
