@@ -1,3 +1,0 @@
-- [ ] Abstract user crud
-- [ ] Post resolver
-- [ ] Relation between Post and User

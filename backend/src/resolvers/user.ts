@@ -1,70 +1,70 @@
 import { Arg, Args, Ctx, Int, Mutation, Query, Resolver } from "type-graphql";
-import { RegisterArgs, UpdateUserArgs } from "../args/user";
+import { LoginArgs, RegisterArgs, UpdateUserArgs } from "../args/user";
+import { AuthController } from "../controllers/auth";
+import { UserController } from "../controllers/user";
 import { User } from "../entities/User";
 import { Context } from "../type";
-import { Encrypt } from "../utils/encrypt";
 
 @Resolver()
 export class UserResolver {
   @Query(() => [User])
-  users(@Ctx() { em }: Context): Promise<User[]> {
-    return em.find(User, {});
+  async users(): Promise<User[]> {
+    const users = await UserController.getAll();
+    return users;
   }
 
   @Query(() => User, { nullable: true })
-  user(
-    @Arg("id", () => Int) id: number,
-    @Ctx() { em }: Context
-  ): Promise<User | null> {
-    return em.findOne(User, {
-      id,
-    });
+  async user(@Arg("id", () => Int) id: number): Promise<User | null> {
+    const user = await UserController.getOne(id);
+    return user;
   }
 
   @Mutation(() => User)
   async register(
     @Args() credentials: RegisterArgs,
-    @Ctx() { em }: Context
+    @Ctx() { req }: Context
   ): Promise<User | null> {
-    const hashedPassword = await Encrypt.encrypt(credentials.password);
-    const user = em.create(User, {
-      ...credentials,
-      password: hashedPassword,
-    });
-    await em.persistAndFlush(user);
+    const user = await AuthController.register(credentials);
+    (req.session as any).userId = user.id;
+    return user;
+  }
+
+  @Mutation(() => User, { nullable: true })
+  async login(
+    @Args() credentials: LoginArgs,
+    @Ctx() { req }: Context
+  ): Promise<User | null> {
+    try {
+      const user = await AuthController.login(credentials);
+      (req.session as any).userId = user.id;
+      return user;
+    } catch (error) {
+      console.log("Login Error", error);
+      return null;
+    }
+  }
+
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req }: Context) {
+    const { userId } = req.session as any;
+    // User not logged in
+    if (!userId) {
+      return null;
+    }
+    const user = await UserController.getOne(userId);
     return user;
   }
 
   @Mutation(() => User, { nullable: true })
   async updateUser(
     @Arg("id") id: number,
-    @Args() update: UpdateUserArgs,
-    @Ctx() { em }: Context
+    @Args() update: UpdateUserArgs
   ): Promise<User | null> {
-    const user = await em.findOne(User, { id });
-    if (!user) {
-      return null;
-    }
-    if (update.fullName) {
-      user.fullName = update.fullName;
-    }
-    if (update.avatar) {
-      user.avatar = update.avatar;
-    }
-    if (update.banner) {
-      user.banner = update.banner;
-    }
-    await em.flush();
-    return user;
+    return UserController.update(id, update);
   }
 
   @Mutation(() => Boolean)
-  async deleteUser(@Arg("id") id: number, @Ctx() { em }: Context) {
-    try {
-      await em.nativeDelete(User, { id });
-      return true;
-    } catch (_) {
-      return false;
-    }
+  async deleteUser(@Arg("id") id: number) {
+    return UserController.delete(id);
   }
 }

@@ -5,5 +5,7 @@ export class Encrypt {
     return argon2.hash(plainText);
   }
 
-  public static decrypt(_plainText: string, _encrypted: string) {}
+  public static verify(plainText: string, encrypted: string) {
+    return argon2.verify(encrypted, plainText);
+  }
 }
