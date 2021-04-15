@@ -2,8 +2,6 @@ import "reflect-metadata";
 import { PORT, __prod__ } from "./constants";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
-import { HelloResolver } from "./resolvers/hello";
-import { UserResolver } from "./resolvers/user";
 import { connection } from "./db";
 import dotenv from "dotenv";
 import express from "express";
@@ -11,6 +9,10 @@ import redis from "redis";
 import session from "express-session";
 
 import connectRedis from "connect-redis";
+
+import { PostResolver } from "./resolvers/post";
+import { HelloResolver } from "./resolvers/hello";
+import { UserResolver } from "./resolvers/user";
 
 dotenv.config();
 
@@ -22,7 +24,7 @@ dotenv.config();
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, UserResolver],
+      resolvers: [HelloResolver, UserResolver, PostResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({ em: orm.em, req, res }),
