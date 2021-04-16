@@ -23,7 +23,7 @@ export class UserResolver {
   async register(
     @Args() credentials: RegisterArgs,
     @Ctx() { req }: Context
-  ): Promise<User | null> {
+  ): Promise<User> {
     const user = await AuthController.register(credentials);
     (req.session as any).userId = user.id;
     return user;
