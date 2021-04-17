@@ -1,11 +1,8 @@
 import React from "react";
+import { Routing } from "./routing";
 
-function App() {
-  return (
-    <div className="App">
-      <h1>Only Friends</h1>
-    </div>
-  );
-}
+const App = () => {
+  return <Routing />;
+};
 
 export default App;
