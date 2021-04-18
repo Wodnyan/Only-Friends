@@ -1,9 +1,29 @@
-import { Arg, Args, Ctx, Int, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Args,
+  Ctx,
+  Int,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+  Field,
+} from "type-graphql";
 import { LoginArgs, RegisterArgs, UpdateUserArgs } from "../args/user";
 import { AuthController } from "../controllers/auth";
 import { UserController } from "../controllers/user";
 import { User } from "../entities/User";
+import { ValidationError } from "../graphql-objects/errors";
 import { Context } from "../type";
+
+@ObjectType()
+class UserResponse {
+  @Field(() => [ValidationError], { nullable: true })
+  validationErrors?: ValidationError[];
+
+  @Field(() => User, { nullable: true })
+  user?: User;
+}
 
 @Resolver()
 export class UserResolver {
@@ -19,14 +39,23 @@ export class UserResolver {
     return user;
   }
 
-  @Mutation(() => User)
+  @Mutation(() => UserResponse)
   async register(
     @Args() credentials: RegisterArgs,
     @Ctx() { req }: Context
-  ): Promise<User> {
-    const user = await AuthController.register(credentials);
-    (req.session as any).userId = user.id;
-    return user;
+  ): Promise<UserResponse> {
+    try {
+      const user = await AuthController.register(credentials);
+      (req.session as any).userId = user.id;
+      return { user };
+    } catch (error) {
+      if (error.isValidationError) {
+        return {
+          validationErrors: error.errors,
+        };
+      }
+      throw error;
+    }
   }
 
   @Mutation(() => User, { nullable: true })
