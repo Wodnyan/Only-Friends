@@ -8,6 +8,8 @@ import Button from "@material-ui/core/Button";
 import { AccountCircle, Email } from "@material-ui/icons";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
+import { useRegisterMutation } from "../../generated/graphql";
+
 import { useAuthStyles } from "../../styles/pages/auth";
 import { Link } from "react-router-dom";
 import { PasswordInput } from "../../components/PasswordInput";
@@ -21,9 +23,12 @@ interface Inputs {
 
 export const SignUp: React.FC = () => {
   const { register, handleSubmit } = useForm<Inputs>();
+  const [, registerMutation] = useRegisterMutation();
   const classes = useAuthStyles();
 
-  const onSubmit = (data: Inputs) => console.log(data);
+  const onSubmit = async (data: Inputs) => {
+    console.log(data);
+  };
 
   return (
     <Container className={classes.container} maxWidth="sm">
