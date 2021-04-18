@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import express from "express";
 import redis from "redis";
 import session from "express-session";
+import cors from "cors";
 
 import connectRedis from "connect-redis";
 
@@ -34,6 +35,12 @@ dotenv.config();
 
   // Middlewares
   app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
+  app.use(
     session({
       name: "qid",
       store: new RedisStore({ client: redisClient, disableTouch: true }),
@@ -49,7 +56,12 @@ dotenv.config();
     })
   );
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({
+    app,
+    cors: {
+      origin: false,
+    },
+  });
 
   app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);

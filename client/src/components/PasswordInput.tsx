@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { InputHTMLAttributes, useState } from "react";
 
 import TextField from "@material-ui/core/TextField";
 import { Https, Visibility, VisibilityOff } from "@material-ui/icons";
@@ -16,7 +16,10 @@ const useStyles = makeStyles((_: Theme) =>
   })
 );
 
-export const PasswordInput: any = React.forwardRef((_, ref) => {
+export const PasswordInput: any = React.forwardRef<
+  any,
+  InputHTMLAttributes<HTMLInputElement>
+>((_, ref) => {
   const classes = useStyles();
 
   const [showPassword, setShowPassword] = useState(false);

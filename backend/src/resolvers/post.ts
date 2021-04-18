@@ -7,8 +7,12 @@ import { Context } from "../type";
 @Resolver()
 export class PostResolver {
   @Query(() => [Post])
-  async posts(): Promise<Post[] | []> {
-    const posts = await PostController.getAll();
+  async posts(
+    @Arg("authorId", { nullable: true }) authorId: number,
+    @Arg("limit", { nullable: true }) limit: number,
+    @Arg("offset", { nullable: true }) offset: number
+  ): Promise<Post[] | []> {
+    const posts = await PostController.getAll({ authorId, limit, offset });
     return posts;
   }
 

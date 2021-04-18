@@ -14,9 +14,6 @@ interface LoginCredentials {
   password: string;
 }
 
-// TODO: Check is email already exists
-// TODO: General validation
-
 export class AuthController {
   public static async register(credentials: SignUpCredentials) {
     try {
@@ -37,7 +34,6 @@ export class AuthController {
         const error = new Error("Username already exists");
         throw error;
       } else {
-        console.error(error);
         throw error;
       }
     }
