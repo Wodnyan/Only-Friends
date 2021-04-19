@@ -1,13 +1,15 @@
-interface ValidationErrors {
+export interface ValidationError {
   field: string;
-  error: string;
+  message: string;
 }
 
 export class ValidationException extends Error {
-  errors: ValidationErrors[];
+  errors: ValidationError[];
+  isValidationError: boolean;
 
-  constructor(message: string, errors: ValidationErrors[]) {
+  constructor(message: string, errors: ValidationError[]) {
     super(message);
     this.errors = errors;
+    this.isValidationError = true;
   }
 }

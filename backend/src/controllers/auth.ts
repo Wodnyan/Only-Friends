@@ -1,3 +1,7 @@
+import {
+  ValidationError,
+  ValidationException,
+} from "../exceptions/ValidationException";
 import { Encrypt } from "../utils/encrypt";
 import { validateRegisterSchema } from "../validators/user";
 import { UserController } from "./user";
@@ -14,6 +18,22 @@ interface LoginCredentials {
   password: string;
 }
 
+interface JoiValidationErrorDetails {
+  message: string;
+  context: {
+    label: string;
+  };
+}
+
+const joiValidationErrorToValidationErrorMap = (
+  errors: JoiValidationErrorDetails[]
+): ValidationError[] => {
+  return errors.map(({ message, context: { label } }: any) => ({
+    message,
+    field: label,
+  }));
+};
+
 export class AuthController {
   public static async register(credentials: SignUpCredentials) {
     try {
@@ -25,14 +45,34 @@ export class AuthController {
       });
       return user;
     } catch (error) {
-      // Unique Email
+      let errors: ValidationError[] | [] = [];
+      if (error.isJoi) {
+        const validationErrors = joiValidationErrorToValidationErrorMap(
+          error.details
+        );
+        errors = [...errors, ...validationErrors];
+      }
       if (error.constraint === "user_email_unique") {
-        const error = new Error("Email already exists");
-        throw error;
-        // Unique Username
-      } else if (error.constraint === "user_username_unique") {
-        const error = new Error("Username already exists");
-        throw error;
+        errors = [
+          ...errors,
+          {
+            field: "email",
+            message: "Email is taken",
+          },
+        ];
+      }
+      if (error.constraint === "user_username_unique") {
+        errors = [
+          ...errors,
+          {
+            field: "username",
+            message: "Username is taken",
+          },
+        ];
+      }
+      if (errors.length > 0) {
+        const validationError = new ValidationException(error.message, errors);
+        throw validationError;
       } else {
         throw error;
       }

@@ -5,6 +5,7 @@ import { Https, Visibility, VisibilityOff } from "@material-ui/icons";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 const useStyles = makeStyles((_: Theme) =>
   createStyles({
@@ -16,10 +17,14 @@ const useStyles = makeStyles((_: Theme) =>
   })
 );
 
+interface Props {
+  error?: string;
+}
+
 export const PasswordInput: any = React.forwardRef<
-  any,
-  InputHTMLAttributes<HTMLInputElement>
->((_, ref) => {
+  UseFormRegisterReturn,
+  InputHTMLAttributes<HTMLInputElement> & Props
+>(({ error }, ref) => {
   const classes = useStyles();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -32,6 +37,8 @@ export const PasswordInput: any = React.forwardRef<
         label="Password"
         variant="outlined"
         type={showPassword ? "text" : "password"}
+        error={Boolean(error)}
+        helperText={error}
         {...ref}
         InputProps={{
           startAdornment: (
