@@ -21,7 +21,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createPost?: Maybe<Post>;
   deletePost: Scalars['Boolean'];
-  register: User;
+  register: UserResponse;
   login?: Maybe<User>;
   updateUser?: Maybe<User>;
   deleteUser: Scalars['Boolean'];
@@ -116,6 +116,18 @@ export type User = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type UserResponse = {
+  __typename?: 'UserResponse';
+  validationErrors?: Maybe<Array<ValidationError>>;
+  user?: Maybe<User>;
+};
+
+export type ValidationError = {
+  __typename?: 'ValidationError';
+  field: Scalars['String'];
+  message: Scalars['String'];
+};
+
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String'];
   fullName: Scalars['String'];
@@ -127,8 +139,14 @@ export type RegisterMutationVariables = Exact<{
 export type RegisterMutation = (
   { __typename?: 'Mutation' }
   & { register: (
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'username'>
+    { __typename?: 'UserResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username'>
+    )>, validationErrors?: Maybe<Array<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'field' | 'message'>
+    )>> }
   ) }
 );
 
@@ -141,8 +159,14 @@ export const RegisterDocument = gql`
     email: $email
     password: $password
   ) {
-    id
-    username
+    user {
+      id
+      username
+    }
+    validationErrors {
+      field
+      message
+    }
   }
 }
     `;

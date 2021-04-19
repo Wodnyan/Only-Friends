@@ -13,6 +13,8 @@ import { useRegisterMutation } from "../../generated/graphql";
 import { useAuthStyles } from "../../styles/pages/auth";
 import { Link } from "react-router-dom";
 import { PasswordInput } from "../../components/PasswordInput";
+import { registerSchema } from "../../utils/validators/user";
+import { useYupValidationResolver } from "../../utils/validators/";
 
 interface Inputs {
   username: string;
@@ -22,12 +24,52 @@ interface Inputs {
 }
 
 export const SignUp: React.FC = () => {
-  const { register, handleSubmit } = useForm<Inputs>();
+  const resolver = useYupValidationResolver(registerSchema);
+  const {
+    formState: { isValid, errors },
+    register,
+    handleSubmit,
+    setError,
+  } = useForm<Inputs>({
+    resolver,
+  });
   const [, registerMutation] = useRegisterMutation();
   const classes = useAuthStyles();
 
   const onSubmit = async (data: Inputs) => {
-    console.log(data);
+    try {
+      if (isValid) {
+        const response = await registerMutation(data);
+        if (response.data?.register.validationErrors) {
+          response.data?.register.validationErrors.forEach(
+            ({ message, field }: any) => {
+              setError(field, {
+                message,
+                type: "manual",
+              });
+            }
+          );
+        }
+        /* 
+          Temporary Fix
+          Otherwise doesn't resubmit
+        */
+      } else {
+        const response = await registerMutation(data);
+        if (response.data?.register.validationErrors) {
+          response.data?.register.validationErrors.forEach(
+            ({ message, field }: any) => {
+              setError(field, {
+                message,
+                type: "manual",
+              });
+            }
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -59,6 +101,8 @@ export const SignUp: React.FC = () => {
               </InputAdornment>
             ),
           }}
+          error={Boolean(errors?.username)}
+          helperText={errors.username?.message}
         />
         <TextField
           fullWidth
@@ -74,6 +118,8 @@ export const SignUp: React.FC = () => {
               </InputAdornment>
             ),
           }}
+          error={Boolean(errors?.fullName)}
+          helperText={errors.fullName?.message}
         />
         <TextField
           fullWidth
@@ -89,8 +135,13 @@ export const SignUp: React.FC = () => {
               </InputAdornment>
             ),
           }}
+          error={Boolean(errors?.email)}
+          helperText={errors.email?.message}
         />
-        <PasswordInput ref={register("password")} />
+        <PasswordInput
+          error={errors?.password?.message}
+          ref={register("password")}
+        />
         <div className={classes.bottom}>
           <span>
             Already have an account?
