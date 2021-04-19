@@ -1,13 +1,9 @@
-import gql from "graphql-tag";
-import * as Urql from "urql";
+import gql from 'graphql-tag';
+import * as Urql from 'urql';
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
-  { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -20,173 +16,161 @@ export type Scalars = {
   DateTime: any;
 };
 
+
 export type Mutation = {
-  __typename?: "Mutation";
+  __typename?: 'Mutation';
   createPost?: Maybe<Post>;
-  deletePost: Scalars["Boolean"];
+  deletePost: Scalars['Boolean'];
   register: UserResponse;
   login?: Maybe<User>;
   updateUser?: Maybe<User>;
-  deleteUser: Scalars["Boolean"];
+  deleteUser: Scalars['Boolean'];
 };
+
 
 export type MutationCreatePostArgs = {
-  title: Scalars["String"];
-  description: Scalars["String"];
-  image?: Maybe<Scalars["String"]>;
+  title: Scalars['String'];
+  description: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
 };
+
 
 export type MutationDeletePostArgs = {
-  id: Scalars["Float"];
+  id: Scalars['Float'];
 };
+
 
 export type MutationRegisterArgs = {
-  username: Scalars["String"];
-  fullName: Scalars["String"];
-  email: Scalars["String"];
-  password: Scalars["String"];
+  username: Scalars['String'];
+  fullName: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
+
 
 export type MutationLoginArgs = {
-  email: Scalars["String"];
-  password: Scalars["String"];
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
+
 
 export type MutationUpdateUserArgs = {
-  fullName?: Maybe<Scalars["String"]>;
-  banner?: Maybe<Scalars["String"]>;
-  avatar?: Maybe<Scalars["String"]>;
-  id: Scalars["Float"];
+  fullName?: Maybe<Scalars['String']>;
+  banner?: Maybe<Scalars['String']>;
+  avatar?: Maybe<Scalars['String']>;
+  id: Scalars['Float'];
 };
 
+
 export type MutationDeleteUserArgs = {
-  id: Scalars["Float"];
+  id: Scalars['Float'];
 };
 
 export type Post = {
-  __typename?: "Post";
-  id: Scalars["Float"];
-  title: Scalars["String"];
-  description: Scalars["String"];
-  image?: Maybe<Scalars["String"]>;
+  __typename?: 'Post';
+  id: Scalars['Float'];
+  title: Scalars['String'];
+  description: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
   author: User;
-  createdAt: Scalars["DateTime"];
-  updatedAt: Scalars["DateTime"];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
 };
 
 export type Query = {
-  __typename?: "Query";
+  __typename?: 'Query';
   posts: Array<Post>;
   post: Post;
-  hello: Scalars["String"];
+  hello: Scalars['String'];
   users: Array<User>;
   user?: Maybe<User>;
   me?: Maybe<User>;
 };
 
+
 export type QueryPostsArgs = {
-  offset?: Maybe<Scalars["Float"]>;
-  limit?: Maybe<Scalars["Float"]>;
-  authorId?: Maybe<Scalars["Float"]>;
+  offset?: Maybe<Scalars['Float']>;
+  limit?: Maybe<Scalars['Float']>;
+  authorId?: Maybe<Scalars['Float']>;
 };
+
 
 export type QueryPostArgs = {
-  id: Scalars["Float"];
+  id: Scalars['Float'];
 };
 
+
 export type QueryUserArgs = {
-  id: Scalars["Int"];
+  id: Scalars['Int'];
 };
 
 export type User = {
-  __typename?: "User";
-  id: Scalars["Float"];
-  username: Scalars["String"];
-  fullName: Scalars["String"];
-  email: Scalars["String"];
-  avatar?: Maybe<Scalars["String"]>;
-  banner?: Maybe<Scalars["String"]>;
-  createdAt: Scalars["DateTime"];
-  updatedAt: Scalars["DateTime"];
+  __typename?: 'User';
+  id: Scalars['Float'];
+  username: Scalars['String'];
+  fullName: Scalars['String'];
+  email: Scalars['String'];
+  avatar?: Maybe<Scalars['String']>;
+  banner?: Maybe<Scalars['String']>;
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
 };
 
 export type UserResponse = {
-  __typename?: "UserResponse";
+  __typename?: 'UserResponse';
   validationErrors?: Maybe<Array<ValidationError>>;
   user?: Maybe<User>;
 };
 
 export type ValidationError = {
-  __typename?: "ValidationError";
-  field: Scalars["String"];
-  message: Scalars["String"];
+  __typename?: 'ValidationError';
+  field: Scalars['String'];
+  message: Scalars['String'];
 };
 
 export type RegisterMutationVariables = Exact<{
-  username: Scalars["String"];
-  fullName: Scalars["String"];
-  password: Scalars["String"];
-  email: Scalars["String"];
+  username: Scalars['String'];
+  fullName: Scalars['String'];
+  password: Scalars['String'];
+  email: Scalars['String'];
 }>;
 
-export type RegisterMutation = { __typename?: "Mutation" } & {
-  register: { __typename?: "UserResponse" } & {
-    user?: Maybe<{ __typename?: "User" } & Pick<User, "id" | "username">>;
-    validationErrors?: Maybe<
-      Array<
-        { __typename?: "ValidationError" } & Pick<
-          ValidationError,
-          "field" | "message"
-        >
-      >
-    >;
-  };
-};
 
-export type MeQueryVariables = Exact<{ [key: string]: never }>;
+export type RegisterMutation = (
+  { __typename?: 'Mutation' }
+  & { register: (
+    { __typename?: 'UserResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username' | 'email' | 'fullName' | 'createdAt' | 'updatedAt'>
+    )>, validationErrors?: Maybe<Array<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'field' | 'message'>
+    )>> }
+  ) }
+);
 
-export type MeQuery = { __typename?: "Query" } & {
-  me?: Maybe<
-    { __typename?: "User" } & Pick<
-      User,
-      "id" | "username" | "email" | "fullName" | "createdAt" | "updatedAt"
-    >
-  >;
-};
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username' | 'email' | 'fullName' | 'createdAt' | 'updatedAt'>
+  )> }
+);
+
 
 export const RegisterDocument = gql`
-  mutation Register(
-    $username: String!
-    $fullName: String!
-    $password: String!
-    $email: String!
+    mutation Register($username: String!, $fullName: String!, $password: String!, $email: String!) {
+  register(
+    fullName: $fullName
+    username: $username
+    email: $email
+    password: $password
   ) {
-    register(
-      fullName: $fullName
-      username: $username
-      email: $email
-      password: $password
-    ) {
-      user {
-        id
-        username
-      }
-      validationErrors {
-        field
-        message
-      }
-    }
-  }
-`;
-
-export function useRegisterMutation() {
-  return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(
-    RegisterDocument
-  );
-}
-export const MeDocument = gql`
-  query Me {
-    me {
+    user {
       id
       username
       email
@@ -194,12 +178,30 @@ export const MeDocument = gql`
       createdAt
       updatedAt
     }
+    validationErrors {
+      field
+      message
+    }
   }
-`;
-
-export function useMeQuery(
-  options: Omit<Urql.UseQueryArgs<MeQueryVariables>, "query"> = {}
-) {
-  return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
 }
+    `;
 
+export function useRegisterMutation() {
+  return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const MeDocument = gql`
+    query Me {
+  me {
+    id
+    username
+    email
+    fullName
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
