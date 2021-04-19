@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
@@ -24,6 +25,7 @@ interface Inputs {
 }
 
 export const SignUp: React.FC = () => {
+  const history = useHistory();
   const resolver = useYupValidationResolver(registerSchema);
   const {
     formState: { isValid, errors },
@@ -49,6 +51,8 @@ export const SignUp: React.FC = () => {
               });
             }
           );
+        } else {
+          history.push("/home");
         }
         /* 
           Temporary Fix
@@ -65,6 +69,8 @@ export const SignUp: React.FC = () => {
               });
             }
           );
+        } else {
+          history.push("/home");
         }
       }
     } catch (error) {
