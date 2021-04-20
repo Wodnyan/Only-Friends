@@ -3,7 +3,10 @@ import {
   ValidationException,
 } from "../exceptions/ValidationException";
 import { Encrypt } from "../utils/encrypt";
-import { validateRegisterSchema } from "../validators/user";
+import {
+  validateLoginSchema,
+  validateRegisterSchema,
+} from "../validators/user";
 import { UserController } from "./user";
 
 interface SignUpCredentials {
@@ -80,17 +83,40 @@ export class AuthController {
   }
 
   public static async login(credentials: LoginCredentials) {
-    const user = await UserController.getOneByEmail(credentials.email);
-    if (!user) {
-      throw new Error("User not found");
+    try {
+      await validateLoginSchema(credentials);
+      const user = await UserController.getOneByEmail(credentials.email);
+      if (!user) {
+        throw new ValidationException("User not found", [
+          {
+            message: "User not found",
+            field: "email",
+          },
+        ]);
+      }
+      const isPasswordCorrect = await Encrypt.verify(
+        credentials.password,
+        user.password!
+      );
+      if (!isPasswordCorrect) {
+        throw new ValidationException("Incorrect password", [
+          {
+            message: "Incorrect password",
+            field: "password",
+          },
+        ]);
+      }
+      return user;
+    } catch (error) {
+      if (error.isValidationError) throw error;
+      else if (error.isJoi) {
+        const validationErrors = joiValidationErrorToValidationErrorMap(
+          error.details
+        );
+        throw new ValidationException(error.message, validationErrors);
+      } else {
+        throw error;
+      }
     }
-    const isPasswordCorrect = await Encrypt.verify(
-      credentials.password,
-      user.password!
-    );
-    if (!isPasswordCorrect) {
-      throw new Error("Incorrect password");
-    }
-    return user;
   }
 }

@@ -10,6 +10,7 @@ import {
   Field,
 } from "type-graphql";
 import { LoginArgs, RegisterArgs, UpdateUserArgs } from "../args/user";
+import { SESSION_COOKIE_NAME } from "../constants";
 import { AuthController } from "../controllers/auth";
 import { UserController } from "../controllers/user";
 import { User } from "../entities/User";
@@ -58,18 +59,32 @@ export class UserResolver {
     }
   }
 
-  @Mutation(() => User, { nullable: true })
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: Context) {
+    return new Promise((resolve) => {
+      res.clearCookie(SESSION_COOKIE_NAME);
+      req.session.destroy((error) => {
+        return resolve(error === undefined);
+      });
+    });
+  }
+
+  @Mutation(() => UserResponse, { nullable: true })
   async login(
     @Args() credentials: LoginArgs,
     @Ctx() { req }: Context
-  ): Promise<User | null> {
+  ): Promise<UserResponse | null> {
     try {
       const user = await AuthController.login(credentials);
       (req.session as any).userId = user.id;
-      return user;
+      return { user };
     } catch (error) {
-      console.log("Login Error", error);
-      return null;
+      if (error.isValidationError) {
+        return {
+          validationErrors: error.errors,
+        };
+      }
+      throw error;
     }
   }
 

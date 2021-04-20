@@ -1,8 +1,11 @@
-import { Typography } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
+
 import MaterialLink from "@material-ui/core/Link";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
-import { useMeQuery } from "../../generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
     navList: {
       display: "flex",
       alignItems: "center",
-      li: {
+      "& > *": {
         marginLeft: theme.spacing(1),
       },
     },
@@ -25,18 +28,29 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const NavBar = () => {
+  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
+  const history = useHistory();
   const classes = useStyles();
   const [{ data, fetching }] = useMeQuery();
-
   let navList = null;
 
-  console.log(data);
+  const handleLogout = async () => {
+    await logout();
+    history.push("/");
+  };
 
   // Loading
   if (fetching) {
     // User not logged in
   } else if (data?.me) {
-    navList = <h1>{data.me.username}</h1>;
+    navList = (
+      <div className={classes.navList}>
+        <h1>{data.me.username}</h1>{" "}
+        <Button onClick={handleLogout} variant="contained">
+          {logoutFetching ? <CircularProgress /> : "Logout"}
+        </Button>
+      </div>
+    );
     // User logged in
   } else {
     navList = (

@@ -11,12 +11,7 @@ mutation Register(
     password: $password
   ) {
     user {
-      id
-      username
-      email
-      fullName
-      createdAt
-      updatedAt
+      ...authUser
     }
     validationErrors {
       field
