@@ -69,18 +69,22 @@ export class UserResolver {
     });
   }
 
-  @Mutation(() => User, { nullable: true })
+  @Mutation(() => UserResponse, { nullable: true })
   async login(
     @Args() credentials: LoginArgs,
     @Ctx() { req }: Context
-  ): Promise<User | null> {
+  ): Promise<UserResponse | null> {
     try {
       const user = await AuthController.login(credentials);
       (req.session as any).userId = user.id;
-      return user;
+      return { user };
     } catch (error) {
-      console.log("Login Error", error);
-      return null;
+      if (error.isValidationError) {
+        return {
+          validationErrors: error.errors,
+        };
+      }
+      throw error;
     }
   }
 
