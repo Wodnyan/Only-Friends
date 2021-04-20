@@ -1,0 +1,8 @@
+fragment authUser on User {
+  id
+  username
+  fullName
+  email
+  createdAt
+  updatedAt
+}
