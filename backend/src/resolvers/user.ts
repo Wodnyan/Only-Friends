@@ -10,6 +10,7 @@ import {
   Field,
 } from "type-graphql";
 import { LoginArgs, RegisterArgs, UpdateUserArgs } from "../args/user";
+import { SESSION_COOKIE_NAME } from "../constants";
 import { AuthController } from "../controllers/auth";
 import { UserController } from "../controllers/user";
 import { User } from "../entities/User";
@@ -56,6 +57,16 @@ export class UserResolver {
       }
       throw error;
     }
+  }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: Context) {
+    return new Promise((resolve) => {
+      res.clearCookie(SESSION_COOKIE_NAME);
+      req.session.destroy((error) => {
+        return resolve(error === undefined);
+      });
+    });
   }
 
   @Mutation(() => User, { nullable: true })

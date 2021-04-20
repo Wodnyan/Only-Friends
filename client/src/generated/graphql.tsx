@@ -22,6 +22,7 @@ export type Mutation = {
   createPost?: Maybe<Post>;
   deletePost: Scalars['Boolean'];
   register: UserResponse;
+  logout: Scalars['Boolean'];
   login?: Maybe<User>;
   updateUser?: Maybe<User>;
   deleteUser: Scalars['Boolean'];
@@ -133,6 +134,14 @@ export type AuthUserFragment = (
   & Pick<User, 'id' | 'username' | 'fullName' | 'email' | 'createdAt' | 'updatedAt'>
 );
 
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'logout'>
+);
+
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String'];
   fullName: Scalars['String'];
@@ -176,6 +185,15 @@ export const AuthUserFragmentDoc = gql`
   updatedAt
 }
     `;
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout
+}
+    `;
+
+export function useLogoutMutation() {
+  return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
+};
 export const RegisterDocument = gql`
     mutation Register($username: String!, $fullName: String!, $password: String!, $email: String!) {
   register(
