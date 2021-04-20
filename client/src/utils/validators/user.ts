@@ -8,6 +8,11 @@ export const registerSchema = Joi.object({
   fullName: Joi.string().max(255).required(),
 });
 
+export const loginSchema = Joi.object({
+  email: Joi.string().email({ tlds: false }).max(255).required(),
+  password: Joi.string().max(255).required(),
+});
+
 export const validateRegisterSchema = (payload: any) => {
   return validateAsnyc(registerSchema, payload);
 };

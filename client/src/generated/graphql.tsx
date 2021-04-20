@@ -23,7 +23,7 @@ export type Mutation = {
   deletePost: Scalars['Boolean'];
   register: UserResponse;
   logout: Scalars['Boolean'];
-  login?: Maybe<User>;
+  login?: Maybe<UserResponse>;
   updateUser?: Maybe<User>;
   deleteUser: Scalars['Boolean'];
 };
@@ -134,6 +134,26 @@ export type AuthUserFragment = (
   & Pick<User, 'id' | 'username' | 'fullName' | 'email' | 'createdAt' | 'updatedAt'>
 );
 
+export type LoginMutationVariables = Exact<{
+  email: Scalars['String'];
+  password: Scalars['String'];
+}>;
+
+
+export type LoginMutation = (
+  { __typename?: 'Mutation' }
+  & { login?: Maybe<(
+    { __typename?: 'UserResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & AuthUserFragment
+    )>, validationErrors?: Maybe<Array<(
+      { __typename?: 'ValidationError' }
+      & Pick<ValidationError, 'field' | 'message'>
+    )>> }
+  )> }
+);
+
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -185,6 +205,23 @@ export const AuthUserFragmentDoc = gql`
   updatedAt
 }
     `;
+export const LoginDocument = gql`
+    mutation Login($email: String!, $password: String!) {
+  login(email: $email, password: $password) {
+    user {
+      ...authUser
+    }
+    validationErrors {
+      field
+      message
+    }
+  }
+}
+    ${AuthUserFragmentDoc}`;
+
+export function useLoginMutation() {
+  return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
+};
 export const LogoutDocument = gql`
     mutation Logout {
   logout
