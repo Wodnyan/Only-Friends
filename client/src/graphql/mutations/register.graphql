@@ -13,6 +13,10 @@ mutation Register(
     user {
       id
       username
+      email
+      fullName
+      createdAt
+      updatedAt
     }
     validationErrors {
       field

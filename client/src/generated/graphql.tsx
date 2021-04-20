@@ -142,12 +142,23 @@ export type RegisterMutation = (
     { __typename?: 'UserResponse' }
     & { user?: Maybe<(
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'username'>
+      & Pick<User, 'id' | 'username' | 'email' | 'fullName' | 'createdAt' | 'updatedAt'>
     )>, validationErrors?: Maybe<Array<(
       { __typename?: 'ValidationError' }
       & Pick<ValidationError, 'field' | 'message'>
     )>> }
   ) }
+);
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = (
+  { __typename?: 'Query' }
+  & { me?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username' | 'email' | 'fullName' | 'createdAt' | 'updatedAt'>
+  )> }
 );
 
 
@@ -162,6 +173,10 @@ export const RegisterDocument = gql`
     user {
       id
       username
+      email
+      fullName
+      createdAt
+      updatedAt
     }
     validationErrors {
       field
@@ -173,4 +188,20 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const MeDocument = gql`
+    query Me {
+  me {
+    id
+    username
+    email
+    fullName
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
 };
