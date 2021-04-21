@@ -4,6 +4,7 @@ import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
 import MaterialLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 
@@ -11,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     header: {
       display: "flex",
+      alignItems: "center",
       background: theme.palette.secondary.light,
       padding: theme.spacing(1),
     },
@@ -71,7 +73,14 @@ export const NavBar = () => {
 
   return (
     <header className={classes.header}>
-      <Typography>OnlyFriends</Typography>
+      <Box>
+        <Typography variant="h4" component="span">
+          Only
+          <Typography variant="h4" component="span">
+            Friends
+          </Typography>
+        </Typography>
+      </Box>
       <nav className={classes.nav}>{navList}</nav>
     </header>
   );
