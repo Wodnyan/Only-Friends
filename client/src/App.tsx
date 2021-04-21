@@ -5,6 +5,7 @@ import { Cache, cacheExchange, QueryInput } from "@urql/exchange-graphcache";
 
 import { Routing } from "./routing";
 import {
+  LoginMutation,
   LogoutMutation,
   MeDocument,
   MeQuery,
@@ -38,6 +39,24 @@ const client = createClient({
               },
               result,
               () => ({ me: null })
+            );
+          },
+          login: (result, _args, cache, _info) => {
+            customUpdateQuery<LoginMutation, MeQuery>(
+              cache,
+              {
+                query: MeDocument,
+              },
+              result,
+              (result, query) => {
+                if (result.login?.validationErrors) {
+                  return query;
+                } else {
+                  return {
+                    me: result.login?.user,
+                  };
+                }
+              }
             );
           },
           register: (result, _args, cache, _info) => {
