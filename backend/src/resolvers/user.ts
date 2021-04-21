@@ -69,11 +69,11 @@ export class UserResolver {
     });
   }
 
-  @Mutation(() => UserResponse, { nullable: true })
+  @Mutation(() => UserResponse)
   async login(
     @Args() credentials: LoginArgs,
     @Ctx() { req }: Context
-  ): Promise<UserResponse | null> {
+  ): Promise<UserResponse> {
     try {
       const user = await AuthController.login(credentials);
       (req.session as any).userId = user.id;
