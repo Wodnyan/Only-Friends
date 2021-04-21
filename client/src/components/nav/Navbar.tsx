@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
     header: {
       display: "flex",
       alignItems: "center",
-      background: theme.palette.secondary.light,
+      background: theme.palette.info.dark,
       padding: theme.spacing(1),
     },
     nav: {

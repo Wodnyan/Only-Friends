@@ -1,0 +1,13 @@
+query Posts {
+  posts {
+    id
+    title
+    description
+    image
+    createdAt
+    updatedAt
+    author {
+      ...authUser
+    }
+  }
+}
