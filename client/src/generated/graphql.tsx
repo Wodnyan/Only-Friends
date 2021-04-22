@@ -134,6 +134,24 @@ export type AuthUserFragment = (
   & Pick<User, 'id' | 'username' | 'fullName' | 'email' | 'createdAt' | 'updatedAt'>
 );
 
+export type CreatePostMutationVariables = Exact<{
+  title: Scalars['String'];
+  description: Scalars['String'];
+}>;
+
+
+export type CreatePostMutation = (
+  { __typename?: 'Mutation' }
+  & { createPost?: Maybe<(
+    { __typename?: 'Post' }
+    & Pick<Post, 'id' | 'title' | 'description' | 'createdAt' | 'updatedAt'>
+    & { author: (
+      { __typename?: 'User' }
+      & AuthUserFragment
+    ) }
+  )> }
+);
+
 export type LoginMutationVariables = Exact<{
   email: Scalars['String'];
   password: Scalars['String'];
@@ -195,6 +213,21 @@ export type MeQuery = (
   )> }
 );
 
+export type PostsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PostsQuery = (
+  { __typename?: 'Query' }
+  & { posts: Array<(
+    { __typename?: 'Post' }
+    & Pick<Post, 'id' | 'title' | 'description' | 'image' | 'createdAt' | 'updatedAt'>
+    & { author: (
+      { __typename?: 'User' }
+      & AuthUserFragment
+    ) }
+  )> }
+);
+
 export const AuthUserFragmentDoc = gql`
     fragment authUser on User {
   id
@@ -205,6 +238,24 @@ export const AuthUserFragmentDoc = gql`
   updatedAt
 }
     `;
+export const CreatePostDocument = gql`
+    mutation CreatePost($title: String!, $description: String!) {
+  createPost(title: $title, description: $description) {
+    id
+    title
+    description
+    createdAt
+    updatedAt
+    author {
+      ...authUser
+    }
+  }
+}
+    ${AuthUserFragmentDoc}`;
+
+export function useCreatePostMutation() {
+  return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
+};
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
@@ -263,4 +314,23 @@ export const MeDocument = gql`
 
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
+export const PostsDocument = gql`
+    query Posts {
+  posts {
+    id
+    title
+    description
+    image
+    createdAt
+    updatedAt
+    author {
+      ...authUser
+    }
+  }
+}
+    ${AuthUserFragmentDoc}`;
+
+export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });
 };

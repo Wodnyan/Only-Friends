@@ -28,7 +28,6 @@ export class PostResolver {
     @Ctx() { req }: Context
   ): Promise<Post | null> {
     const { userId } = req.session as any;
-    // TODO: Throw an error
     if (!userId) {
       return null;
     }
