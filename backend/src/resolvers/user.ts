@@ -16,6 +16,8 @@ import { UserController } from "../controllers/user";
 import { User } from "../entities/User";
 import { ValidationError } from "../graphql-objects/errors";
 import { Context } from "../type";
+import { sendEmail } from "../utils/sendEmail";
+import { v4 as uuidv4 } from "uuid";
 
 @ObjectType()
 class UserResponse {
@@ -48,6 +50,19 @@ export class UserResolver {
     try {
       const user = await AuthController.register(credentials);
       (req.session as any).userId = user.id;
+      // TODO: create uuid
+      const uniqueId = uuidv4();
+      console.log(uniqueId);
+
+      await sendEmail(
+        user.email,
+        `
+          <h1>Click the link to activate your account</h1>
+          <a href=${
+            "http://localhost:5050/api/v1/users/activate?uuid=" + uniqueId
+          }>Activation Link</a>
+        `
+      );
       return { user };
     } catch (error) {
       if (error.isValidationError) {

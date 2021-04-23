@@ -15,6 +15,8 @@ import { PostResolver } from "./resolvers/post";
 import { HelloResolver } from "./resolvers/hello";
 import { UserResolver } from "./resolvers/user";
 
+import api from "./api";
+
 dotenv.config();
 
 (async () => {
@@ -55,6 +57,7 @@ dotenv.config();
       resave: false,
     })
   );
+  app.use("/api/v1", api);
 
   apolloServer.applyMiddleware({
     app,

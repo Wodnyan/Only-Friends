@@ -19,17 +19,17 @@ export class UserController {
 
   public static async getAll() {
     const { em } = await this.connection;
-    return em.find(User, {});
+    return em.find(User, { isActivated: true });
   }
 
   public static async getOne(id: number) {
     const { em } = await this.connection;
-    return em.findOne(User, { id });
+    return em.findOne(User, { id, isActivated: true });
   }
 
   public static async getOneByEmail(email: string) {
     const { em } = await this.connection;
-    return em.findOne(User, { email });
+    return em.findOne(User, { email, isActivated: true });
   }
 
   public static async create(data: CreateUser) {
