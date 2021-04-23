@@ -49,6 +49,18 @@ export class UserController {
     }
   }
 
+  public static async activate(id: number) {
+    const { em } = await this.connection;
+    const user = await em.findOne(User, { id });
+    if (user) {
+      user.isActivated = true;
+    } else {
+      throw new Error("No user found");
+    }
+    await em.flush();
+    return user;
+  }
+
   public static async update(id: number, update: Update) {
     const { em } = await this.connection;
     const user = await em.findOne(User, { id });

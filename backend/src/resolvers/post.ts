@@ -38,7 +38,6 @@ export class PostResolver {
   @Mutation(() => Boolean)
   async deletePost(@Arg("id") id: number, @Ctx() { req }: Context) {
     const { userId } = req.session as any;
-    // TODO: Throw an error
     if (!userId) {
       return null;
     }

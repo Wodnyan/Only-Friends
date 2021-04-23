@@ -1,3 +1,5 @@
+import { connection } from "../db";
+import { UserActivationCode } from "../entities/UserActivationCode";
 import {
   ValidationError,
   ValidationException,
@@ -8,6 +10,9 @@ import {
   validateRegisterSchema,
 } from "../validators/user";
 import { UserController } from "./user";
+import { v4 as uuidv4 } from "uuid";
+import { sendEmail } from "../utils/sendEmail";
+import { ACTIVATION_EMAIL } from "../constants";
 
 interface SignUpCredentials {
   fullName: string;
@@ -38,14 +43,27 @@ const joiValidationErrorToValidationErrorMap = (
 };
 
 export class AuthController {
+  private static readonly connection = connection();
+
   public static async register(credentials: SignUpCredentials) {
     try {
+      const { em } = await this.connection;
       await validateRegisterSchema(credentials);
       const hashedPassword = await Encrypt.encrypt(credentials.password);
+      // TODO: Make this a transaction
       const user = await UserController.create({
         ...credentials,
         password: hashedPassword,
       });
+      const activationCode = em.create(UserActivationCode, {
+        user: user.id,
+        code: uuidv4(),
+      });
+      await em.persistAndFlush(activationCode);
+      await sendEmail(
+        user.email,
+        ACTIVATION_EMAIL(user.email, activationCode.code)
+      );
       return user;
     } catch (error) {
       let errors: ValidationError[] | [] = [];
