@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
@@ -24,7 +24,7 @@ interface Props {
 }
 
 export const PostCard: React.FC<Props> = ({ post }) => {
-  const [] = useState(false);
+  // const [] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClickMore = (event: React.MouseEvent<HTMLButtonElement>) => {
