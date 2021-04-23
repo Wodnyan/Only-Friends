@@ -86,6 +86,7 @@ export class AuthController {
     try {
       await validateLoginSchema(credentials);
       const user = await UserController.getOneByEmail(credentials.email);
+      // TODO: Check if user is activated
       if (!user) {
         throw new ValidationException("User not found", [
           {

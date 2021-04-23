@@ -10,9 +10,11 @@ export const HomePage: React.FC = () => {
     <>
       <NavBar />
       <CreatePost />
-      {data?.posts.map((post) => (
-        <PostCard post={post} />
-      ))}
+      <main>
+        {data?.posts.map((post) => (
+          <PostCard key={post.id} post={post} />
+        ))}
+      </main>
     </>
   );
 };

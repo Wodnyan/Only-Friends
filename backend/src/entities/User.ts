@@ -64,4 +64,7 @@ export class User {
   @Field(() => Date)
   @Property({ onUpdate: () => new Date(), type: "date" })
   updatedAt = new Date();
+
+  @Property({ default: false })
+  isActivated: boolean;
 }
