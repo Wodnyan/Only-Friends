@@ -40,38 +40,21 @@ export const SignUp: React.FC = () => {
 
   const onSubmit = async (data: Inputs) => {
     try {
-      if (isValid) {
-        const response = await registerMutation(data);
-        if (response.data?.register.validationErrors) {
-          response.data?.register.validationErrors.forEach(
-            ({ message, field }: any) => {
-              setError(field, {
-                message,
-                type: "manual",
-              });
-            }
-          );
-        } else {
-          history.push("/home");
-        }
-        /* 
-          Temporary Fix
-          Otherwise doesn't resubmit
-        */
+      const response = await registerMutation(data);
+      // ERROR
+      if (response.data?.register.validationErrors) {
+        response.data?.register.validationErrors.forEach(
+          ({ message, field }: any) => {
+            setError(field, {
+              message,
+              type: "manual",
+            });
+          }
+        );
       } else {
-        const response = await registerMutation(data);
-        if (response.data?.register.validationErrors) {
-          response.data?.register.validationErrors.forEach(
-            ({ message, field }: any) => {
-              setError(field, {
-                message,
-                type: "manual",
-              });
-            }
-          );
-        } else {
-          history.push("/home");
-        }
+        history.push(
+          `/verify-email?email=${response.data?.register.user?.email}`
+        );
       }
     } catch (error) {
       console.log(error);

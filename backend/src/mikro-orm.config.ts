@@ -4,6 +4,7 @@ import { MikroORM } from "@mikro-orm/core";
 import path from "path";
 import dotenv from "dotenv";
 import { Post } from "./entities/Post";
+import { UserActivationCode } from "./entities/UserActivationCode";
 
 dotenv.config();
 
@@ -13,7 +14,7 @@ export default {
   user: process.env.PG_USER!,
   type: "postgresql",
   debug: !__prod__,
-  entities: [User, Post],
+  entities: [User, Post, UserActivationCode],
   migrations: {
     path: path.join(__dirname, "./migrations"),
     pattern: /^[\w-]+\d+\.[tj]s$/,
