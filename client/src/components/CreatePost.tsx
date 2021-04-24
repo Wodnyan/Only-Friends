@@ -8,15 +8,27 @@ import TextField from "@material-ui/core/TextField";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { calculatePercentage } from "../utils/calculatePercentage";
 import Typography from "@material-ui/core/Typography";
+import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 
 interface Inputs {
   title: string;
   description: string;
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    avatar: {
+      width: theme.spacing(6),
+      height: theme.spacing(6),
+      fontSize: theme.spacing(4),
+    },
+  })
+);
+
 const DESCRIPTION_MAX_LENGTH = 255;
 
 export const CreatePost: React.FC = () => {
+  const classes = useStyles();
   const [, createPost] = useCreatePostMutation();
   const [{ data }] = useMeQuery();
   const [inputs, setInputs] = useState<Inputs>({
@@ -42,8 +54,8 @@ export const CreatePost: React.FC = () => {
 
   return (
     <Box my={2} width="100%" display="flex">
-      <Box>
-        <Avatar>{data?.me?.username}</Avatar>
+      <Box m={0.5}>
+        <Avatar className={classes.avatar}>{data?.me?.username[0]}</Avatar>
       </Box>
       <Box width="100%">
         <form onSubmit={handleSubmit}>
