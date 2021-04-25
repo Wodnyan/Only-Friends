@@ -9,6 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import Box from "@material-ui/core/Box";
 import { Share, Favorite, MoreVert } from "@material-ui/icons";
 
 import { Post, User } from "../generated/graphql";
@@ -40,7 +41,7 @@ export const PostCard: React.FC<Props> = ({ post }) => {
   const report = () => console.log("report");
 
   return (
-    <>
+    <Box mb={4}>
       <Card>
         <CardHeader
           avatar={
@@ -79,6 +80,6 @@ export const PostCard: React.FC<Props> = ({ post }) => {
           </IconButton>
         </CardActions>
       </Card>
-    </>
+    </Box>
   );
 };
