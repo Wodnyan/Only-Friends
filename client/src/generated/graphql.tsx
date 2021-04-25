@@ -131,7 +131,7 @@ export type ValidationError = {
 
 export type AuthUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'id' | 'username' | 'fullName' | 'email' | 'createdAt' | 'updatedAt'>
+  & Pick<User, 'id' | 'username' | 'fullName' | 'email' | 'avatar' | 'createdAt' | 'updatedAt'>
 );
 
 export type CreatePostMutationVariables = Exact<{
@@ -234,6 +234,7 @@ export const AuthUserFragmentDoc = gql`
   username
   fullName
   email
+  avatar
   createdAt
   updatedAt
 }
