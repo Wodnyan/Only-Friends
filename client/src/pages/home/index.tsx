@@ -1,15 +1,24 @@
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import React from "react";
-import { CreatePost } from "../../components/CreatePost";
+import { HomepageLayout } from "../../components/HomepageLayout";
 import { NavBar } from "../../components/nav/Navbar";
 import { PostCard } from "../../components/PostCard";
 import { useMeQuery, usePostsQuery } from "../../generated/graphql";
-import { HomepageLayout } from "../../components/HomepageLayout";
-import Typography from "@material-ui/core/Typography";
-import { UserInfo } from "../../components/UserInfo";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      maxWidth: theme.breakpoints.width("lg"),
+      margin: "0 auto",
+    },
+  }),
+);
 
 export const HomePage: React.FC = () => {
+  const classes = useStyles();
   const [{ data, fetching }] = usePostsQuery();
-  const [{ data: userData }] = useMeQuery();
+  const [{ data: userData, fetching: userFetching }] = useMeQuery();
 
   let body = null;
 
@@ -24,19 +33,11 @@ export const HomePage: React.FC = () => {
   return (
     <>
       <NavBar />
-      <HomepageLayout
-        userInfo={
-          <UserInfo
-            user={{
-              handle: userData!.me!.username,
-              username: userData!.me!.fullName,
-              avatar: userData!.me!.avatar || undefined,
-            }}
-          />
-        }
-        posts={body}
-        createPost={<CreatePost />}
-      />
+      <div className={classes.container}>
+        <HomepageLayout guest={!userFetching && !userData?.me}>
+          {body}
+        </HomepageLayout>
+      </div>
     </>
   );
 };

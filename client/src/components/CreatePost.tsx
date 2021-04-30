@@ -22,12 +22,16 @@ const useStyles = makeStyles((theme: Theme) =>
       height: theme.spacing(6),
       fontSize: theme.spacing(4),
     },
-  })
+  }),
 );
 
 const DESCRIPTION_MAX_LENGTH = 255;
 
-export const CreatePost: React.FC = () => {
+interface Props {
+  full?: boolean;
+}
+
+export const CreatePost: React.FC<Props> = ({ full = true }) => {
   const classes = useStyles();
   const [, createPost] = useCreatePostMutation();
   const [{ data }] = useMeQuery();
@@ -43,7 +47,7 @@ export const CreatePost: React.FC = () => {
   };
 
   const handleChange = (
-    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
     const { name, value } = e.target;
     setInputs((prev) => ({
@@ -54,9 +58,11 @@ export const CreatePost: React.FC = () => {
 
   return (
     <Box my={2} width="100%" display="flex">
-      <Box m={0.5}>
-        <Avatar className={classes.avatar}>{data?.me?.username[0]}</Avatar>
-      </Box>
+      {full && (
+        <Box m={0.5}>
+          <Avatar className={classes.avatar}>{data?.me?.username[0]}</Avatar>
+        </Box>
+      )}
       <Box width="100%">
         <form onSubmit={handleSubmit}>
           <Box mb={2}>
@@ -88,9 +94,9 @@ export const CreatePost: React.FC = () => {
                 value={Math.min(
                   calculatePercentage(
                     inputs.description.length,
-                    DESCRIPTION_MAX_LENGTH
+                    DESCRIPTION_MAX_LENGTH,
                   ),
-                  100
+                  100,
                 )}
                 color={
                   inputs.description.length < DESCRIPTION_MAX_LENGTH

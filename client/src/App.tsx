@@ -16,7 +16,7 @@ function customUpdateQuery<Result, Query>(
   cache: Cache,
   qi: QueryInput,
   result: any,
-  fn: (result: Result, query: Query) => Query
+  fn: (result: Result, query: Query) => Query,
 ) {
   return cache.updateQuery(qi, (data) => fn(result, data as any) as any);
 }
@@ -38,7 +38,7 @@ const client = createClient({
                 query: MeDocument,
               },
               result,
-              () => ({ me: null })
+              () => ({ me: null }),
             );
           },
           login: (result, _args, cache, _info) => {
@@ -56,25 +56,7 @@ const client = createClient({
                     me: result.login?.user,
                   };
                 }
-              }
-            );
-          },
-          register: (result, _args, cache, _info) => {
-            customUpdateQuery<RegisterMutation, MeQuery>(
-              cache,
-              {
-                query: MeDocument,
               },
-              result,
-              (result, query) => {
-                if (result.register.validationErrors) {
-                  return query;
-                } else {
-                  return {
-                    me: result.register.user,
-                  };
-                }
-              }
             );
           },
         },
