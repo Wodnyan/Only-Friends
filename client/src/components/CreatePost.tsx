@@ -35,6 +35,7 @@ export const CreatePost: React.FC<Props> = ({ full = true }) => {
   const classes = useStyles();
   const [, createPost] = useCreatePostMutation();
   const [{ data }] = useMeQuery();
+  const [previewImage, setPreviewImage] = useState("");
   const [inputs, setInputs] = useState<Inputs>({
     description: "",
     title: "",
@@ -54,6 +55,13 @@ export const CreatePost: React.FC<Props> = ({ full = true }) => {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files!;
+    const temp = URL.createObjectURL(files[0]);
+    setPreviewImage(temp);
+    console.log(temp);
   };
 
   return (
@@ -87,45 +95,56 @@ export const CreatePost: React.FC<Props> = ({ full = true }) => {
               value={inputs.description}
             />
           </Box>
-          <Box display="flex" alignItems="center" mt={2}>
-            <Box position="relative" display="inline-flex">
-              <CircularProgress
-                variant="determinate"
-                value={Math.min(
-                  calculatePercentage(
-                    inputs.description.length,
-                    DESCRIPTION_MAX_LENGTH,
-                  ),
-                  100,
-                )}
-                color={
-                  inputs.description.length < DESCRIPTION_MAX_LENGTH
-                    ? "primary"
-                    : "secondary"
-                }
-              />
-              <Box
-                top={0}
-                left={0}
-                bottom={0}
-                right={0}
-                position="absolute"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Typography
-                  variant="caption"
-                  component="div"
-                  color="textSecondary"
-                >
-                  {DESCRIPTION_MAX_LENGTH - inputs.description.length}
-                </Typography>
-              </Box>
+          <img src={previewImage} alt="" />
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mt={2}
+          >
+            <Box>
+              <input type="file" onChange={handleFileChange} />
             </Box>
-            <Button type="submit" variant="contained">
-              Post
-            </Button>
+            <Box display="flex" alignItems="center">
+              <Box position="relative" display="inline-flex">
+                <CircularProgress
+                  variant="determinate"
+                  value={Math.min(
+                    calculatePercentage(
+                      inputs.description.length,
+                      DESCRIPTION_MAX_LENGTH,
+                    ),
+                    100,
+                  )}
+                  color={
+                    inputs.description.length < DESCRIPTION_MAX_LENGTH
+                      ? "primary"
+                      : "secondary"
+                  }
+                />
+                <Box
+                  top={0}
+                  left={0}
+                  bottom={0}
+                  right={0}
+                  position="absolute"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Typography
+                    variant="caption"
+                    component="div"
+                    color="textSecondary"
+                  >
+                    {DESCRIPTION_MAX_LENGTH - inputs.description.length}
+                  </Typography>
+                </Box>
+              </Box>
+              <Button type="submit" variant="contained">
+                Post
+              </Button>
+            </Box>
           </Box>
         </form>
       </Box>
