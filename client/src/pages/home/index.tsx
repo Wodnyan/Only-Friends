@@ -9,7 +9,7 @@ import { UserInfo } from "../../components/UserInfo";
 
 export const HomePage: React.FC = () => {
   const [{ data, fetching }] = usePostsQuery();
-  const [{ data: userData }] = useMeQuery();
+  const [{ data: userData, fetching: userDataFetching }] = useMeQuery();
 
   let body = null;
 
@@ -28,10 +28,11 @@ export const HomePage: React.FC = () => {
         userInfo={
           <UserInfo
             user={{
-              handle: userData!.me!.username,
-              username: userData!.me!.fullName,
-              avatar: userData!.me!.avatar || undefined,
+              handle: userData?.me?.username,
+              username: userData?.me?.fullName,
+              avatar: userData?.me?.avatar || undefined,
             }}
+            loading={userDataFetching}
           />
         }
         posts={body}
