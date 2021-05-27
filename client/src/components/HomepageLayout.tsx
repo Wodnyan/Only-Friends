@@ -2,6 +2,7 @@ import React from "react";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 import { useScreenType } from "../hooks/useScreenType";
+import { CreatePost } from "./CreatePost";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -13,53 +14,52 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  posts: React.ReactNode;
-  createPost: React.ReactNode;
-  userInfo: React.ReactNode;
+  guest: boolean;
+  children: React.ReactNode;
+  leftPanel?: React.ReactNode;
+  rightPanel?: React.ReactNode;
 }
 
 export const HomepageLayout: React.FC<Props> = ({
-  posts,
-  createPost,
-  userInfo,
+  children,
+  guest = true,
+  leftPanel = <h1>Left Panel</h1>,
+  rightPanel = <h1>Right Panel</h1>,
 }) => {
-  const classes = useStyles();
   const screen = useScreenType();
 
   switch (screen) {
     case "fullscreen":
       return (
-        <Grid className={classes.container} container>
+        <Grid container>
           <Grid item xs={3}>
-            Recommended
+            {!guest && leftPanel}
           </Grid>
           <Grid item xs={6}>
-            {createPost}
-            {posts}
+            {!guest && <CreatePost full={false} />}
+            {children}
           </Grid>
           <Grid item xs={3}>
-            {userInfo}
+            {!guest && rightPanel}
           </Grid>
         </Grid>
       );
     case "tablet":
       return (
-        <Grid className={classes.container} container>
+        <Grid container>
           <Grid item xs={8}>
-            {createPost}
-            {posts}
+            {children}
           </Grid>
           <Grid item xs={4}>
-            {userInfo}
+            {!guest && rightPanel}
           </Grid>
         </Grid>
       );
     case "mobile":
       return (
-        <Grid className={classes.container} container>
+        <Grid container>
           <Grid item xs={12}>
-            {createPost}
-            {posts}
+            {children}
           </Grid>
         </Grid>
       );
