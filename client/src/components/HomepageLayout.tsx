@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: theme.breakpoints.width("lg"),
       margin: "0 auto",
     },
-  }),
+  })
 );
 
 interface Props {

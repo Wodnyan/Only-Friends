@@ -1,9 +1,11 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
+import { CreatePost } from "../../components/CreatePost";
 import { HomepageLayout } from "../../components/HomepageLayout";
 import { NavBar } from "../../components/nav/Navbar";
 import { PostCard } from "../../components/PostCard";
+import { UserInfo } from "../../components/UserInfo";
 import { useMeQuery, usePostsQuery } from "../../generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -12,13 +14,13 @@ const useStyles = makeStyles((theme: Theme) =>
       maxWidth: theme.breakpoints.width("lg"),
       margin: "0 auto",
     },
-  }),
+  })
 );
 
 export const HomePage: React.FC = () => {
   const classes = useStyles();
   const [{ data, fetching }] = usePostsQuery();
-  const [{ data: userData, fetching: userFetching }] = useMeQuery();
+  const [{ data: userData, fetching: userDataFetching }] = useMeQuery();
 
   let body = null;
 
@@ -34,9 +36,7 @@ export const HomePage: React.FC = () => {
     <>
       <NavBar />
       <div className={classes.container}>
-        <HomepageLayout guest={!userFetching && !userData?.me}>
-          {body}
-        </HomepageLayout>
+        <HomepageLayout guest={Boolean(userData)}>{body}</HomepageLayout>
       </div>
     </>
   );

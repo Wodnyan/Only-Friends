@@ -1,6 +1,16 @@
-import { MikroORM } from "@mikro-orm/core";
-import microConfig from "./mikro-orm.config";
+import { config } from "dotenv";
+import { createConnection } from "typeorm";
+import path from "path";
+import { User } from "./entity/UserEntity";
 
-export const connection = () => {
-  return MikroORM.init(microConfig);
-};
+config();
+
+export const dbConnection = () =>
+  createConnection({
+    type: "postgres",
+    url: process.env.DATABASE_URL,
+    logging: true,
+    migrations: [path.join(__dirname, "./migrations/*")],
+    entities: [User],
+    synchronize: true,
+  });

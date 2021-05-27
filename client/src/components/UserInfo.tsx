@@ -8,8 +8,8 @@ import Typography from "@material-ui/core/Typography";
 
 interface Props {
   user: {
-    username: string;
-    handle: string;
+    username?: string;
+    handle?: string;
     avatar?: string;
   };
   full?: boolean;
@@ -20,9 +20,7 @@ export const UserInfo: React.FC<Props> = ({ user, full }) => {
     return (
       <Paper>
         <Box p={3}>
-          <Avatar src={user.avatar}>
-            {!user.avatar ? user.username[0] : ""}
-          </Avatar>
+          <Avatar src={user.avatar}>{!user.avatar ? user.username : ""}</Avatar>
           {user.username}
           <UserHandler handler={user.handle} />
           <Box display="flex">
