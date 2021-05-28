@@ -9,6 +9,16 @@ class Hash {
       });
     });
   }
+
+  public compare(encrypted: string, plainText: string): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(plainText, encrypted, (err, same) => {
+        if (err) return reject(err);
+
+        resolve(same);
+      });
+    });
+  }
 }
 
 export const hash = new Hash();
