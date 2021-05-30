@@ -10,6 +10,7 @@ import { SESSION_COOKIE_NAME } from "./constats";
 import cors from "cors";
 import redisStore from "connect-redis";
 import redis from "redis";
+import { PostResolver } from "./resolvers/PostResolver";
 
 dotenv.config();
 
@@ -51,7 +52,7 @@ dotenv.config();
 
   const server = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [AuthResolver],
+      resolvers: [AuthResolver, PostResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
