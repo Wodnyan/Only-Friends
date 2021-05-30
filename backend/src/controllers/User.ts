@@ -39,7 +39,14 @@ export class UserController implements UserControllerInterface {
     });
   }
 
-  // TODO: Get back the inserted user
+  getOneByUsername(username: string) {
+    return getRepository(User).findOne({
+      where: {
+        username,
+      },
+    });
+  }
+
   async insert(payload: InsertPayload): Promise<User> {
     const {
       raw: [generated],
