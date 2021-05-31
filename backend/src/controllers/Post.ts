@@ -4,7 +4,6 @@ import { Post } from "../entity/PostEntity";
 type InsertArticlePayload = {
   title: string;
   description: string;
-  body: string;
   userId: string;
 };
 

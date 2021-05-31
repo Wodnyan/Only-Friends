@@ -7,17 +7,17 @@ import { ApolloContext } from "../types";
 @Resolver()
 export class PostResolver {
   @Query(() => [Post])
-  public async articles(): Promise<Post[] | []> {
+  public async posts(): Promise<Post[] | []> {
     return postController.getAll();
   }
 
   @Query(() => Post)
-  public async article(@Arg("id") id: string): Promise<Post | null> {
+  public async post(@Arg("id") id: string): Promise<Post | null> {
     return (await postController.getOne(id)) || null;
   }
 
   @Mutation(() => Boolean)
-  public async deleteArticle(
+  public async deletePost(
     @Arg("id") id: string,
     @Ctx() { req }: ApolloContext
   ) {
@@ -29,7 +29,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Post, { nullable: true })
-  public async createArticle(
+  public async createPost(
     @Arg("article") article: InsertPostInput,
     @Ctx() { req }: ApolloContext
   ): Promise<Post | null> {

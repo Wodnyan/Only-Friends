@@ -5,6 +5,7 @@ type InsertPayload = {
   username: string;
   password: string;
   email: string;
+  fullName: string;
 };
 
 type UserUpdate = {
@@ -53,8 +54,7 @@ export class UserController implements UserControllerInterface {
     } = await getRepository(User).insert(payload);
     return {
       ...generated,
-      email: payload.email,
-      username: payload.password,
+      ...payload,
     };
   }
 

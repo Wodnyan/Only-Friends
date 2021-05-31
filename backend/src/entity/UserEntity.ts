@@ -32,7 +32,7 @@ export class User {
   password: string;
 
   @Field()
-  @Column({ nullable: true })
+  @Column({ default: "" })
   avatar?: string;
 
   @Field()
