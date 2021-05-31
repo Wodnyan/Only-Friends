@@ -30,11 +30,11 @@ export class PostResolver {
 
   @Mutation(() => Post, { nullable: true })
   public async createPost(
-    @Arg("article") article: InsertPostInput,
+    @Arg("post") post: InsertPostInput,
     @Ctx() { req }: ApolloContext
   ): Promise<Post | null> {
     return postController.insert({
-      ...article,
+      ...post,
       userId: (req.session as any).userId,
     });
   }
