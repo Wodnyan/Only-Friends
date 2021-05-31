@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
@@ -9,7 +9,7 @@ import Button from "@material-ui/core/Button";
 import { Email } from "@material-ui/icons";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
-import { useLoginMutation } from "../../generated/graphql";
+// import { useLoginMutation } from "../../generated/graphql";
 
 import { useAuthStyles } from "../../styles/pages/auth";
 import { Link } from "react-router-dom";
@@ -23,17 +23,17 @@ interface Inputs {
 }
 
 export const Login: React.FC = () => {
-  const history = useHistory();
+  // const history = useHistory();
   const resolver = useYupValidationResolver(loginSchema);
   const {
     formState: { errors },
     register,
     handleSubmit,
-    setError,
+    // setError,
   } = useForm<Inputs>({
     resolver,
   });
-  const [, loginMutation] = useLoginMutation();
+  // const [, loginMutation] = useLoginMutation();
   const classes = useAuthStyles();
 
   const onSubmit = async (data: Inputs) => {

@@ -1,17 +1,17 @@
 import React from "react";
-import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
+// import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 import { useScreenType } from "../hooks/useScreenType";
 import { CreatePost } from "./CreatePost";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      maxWidth: theme.breakpoints.width("lg"),
-      margin: "0 auto",
-    },
-  })
-);
+// const useStyles = makeStyles((theme: Theme) =>
+//   createStyles({
+//     container: {
+//       maxWidth: theme.breakpoints.width("lg"),
+//       margin: "0 auto",
+//     },
+//   })
+// );
 
 interface Props {
   guest: boolean;

@@ -32,11 +32,10 @@ class PostController {
         id: payload.userId,
       },
     });
-    console.log(generated);
-    return {
-      ...generated,
-      ...payload,
-    };
+    const post = await getRepository(Post).findOne(generated.id, {
+      relations: ["user"],
+    });
+    return post!;
   }
 
   async delete(id: string, userId: string) {
