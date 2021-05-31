@@ -4,7 +4,14 @@ import { createClient, dedupExchange, fetchExchange, Provider } from "urql";
 import { Cache, cacheExchange, QueryInput } from "@urql/exchange-graphcache";
 
 import { Routing } from "./routing";
-import { LoginMutation, MeDocument, MeQuery } from "./generated/graphql";
+import {
+  CreatePostMutation,
+  LoginMutation,
+  MeDocument,
+  MeQuery,
+  PostsDocument,
+  PostsQuery,
+} from "./generated/graphql";
 
 function customUpdateQuery<Result, Query>(
   cache: Cache,
@@ -35,6 +42,25 @@ const client = createClient({
           //     () => ({ me: null })
           //   );
           // },
+          createPost: (result, _args, cache, _info) => {
+            customUpdateQuery<CreatePostMutation, PostsQuery>(
+              cache,
+              {
+                query: PostsDocument,
+              },
+              result,
+              (result, query) => {
+                if (result.createPost) {
+                  return {
+                    posts: [result.createPost, ...query.posts],
+                  };
+                }
+                return {
+                  posts: query.posts,
+                };
+              }
+            );
+          },
           login: (result, _args, cache, _info) => {
             customUpdateQuery<LoginMutation, MeQuery>(
               cache,
@@ -44,7 +70,6 @@ const client = createClient({
               result,
               (result, _) => {
                 return {
-                  // me: result.login?.user,
                   me: {
                     ...result.login,
                   },

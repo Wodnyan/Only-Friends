@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: theme.spacing(6),
       fontSize: theme.spacing(4),
     },
-  }),
+  })
 );
 
 const DESCRIPTION_MAX_LENGTH = 255;
@@ -43,12 +43,11 @@ export const CreatePost: React.FC<Props> = ({ full = true }) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const response = await createPost(inputs);
-    console.log(response.data);
+    await createPost(inputs);
   };
 
   const handleChange = (
-    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     const { name, value } = e.target;
     setInputs((prev) => ({
@@ -112,9 +111,9 @@ export const CreatePost: React.FC<Props> = ({ full = true }) => {
                   value={Math.min(
                     calculatePercentage(
                       inputs.description.length,
-                      DESCRIPTION_MAX_LENGTH,
+                      DESCRIPTION_MAX_LENGTH
                     ),
-                    100,
+                    100
                   )}
                   color={
                     inputs.description.length < DESCRIPTION_MAX_LENGTH
