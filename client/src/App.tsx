@@ -4,19 +4,13 @@ import { createClient, dedupExchange, fetchExchange, Provider } from "urql";
 import { Cache, cacheExchange, QueryInput } from "@urql/exchange-graphcache";
 
 import { Routing } from "./routing";
-import {
-  LoginMutation,
-  LogoutMutation,
-  MeDocument,
-  MeQuery,
-  RegisterMutation,
-} from "./generated/graphql";
+import { LoginMutation, MeDocument, MeQuery } from "./generated/graphql";
 
 function customUpdateQuery<Result, Query>(
   cache: Cache,
   qi: QueryInput,
   result: any,
-  fn: (result: Result, query: Query) => Query,
+  fn: (result: Result, query: Query) => Query
 ) {
   return cache.updateQuery(qi, (data) => fn(result, data as any) as any);
 }
@@ -31,16 +25,16 @@ const client = createClient({
     cacheExchange({
       updates: {
         Mutation: {
-          logout: (result, _args, cache, _info) => {
-            customUpdateQuery<LogoutMutation, MeQuery>(
-              cache,
-              {
-                query: MeDocument,
-              },
-              result,
-              () => ({ me: null }),
-            );
-          },
+          // logout: (result, _args, cache, _info) => {
+          //   customUpdateQuery<LogoutMutation, MeQuery>(
+          //     cache,
+          //     {
+          //       query: MeDocument,
+          //     },
+          //     result,
+          //     () => ({ me: null })
+          //   );
+          // },
           login: (result, _args, cache, _info) => {
             customUpdateQuery<LoginMutation, MeQuery>(
               cache,
@@ -48,15 +42,14 @@ const client = createClient({
                 query: MeDocument,
               },
               result,
-              (result, query) => {
-                if (result.login?.validationErrors) {
-                  return query;
-                } else {
-                  return {
-                    me: result.login?.user,
-                  };
-                }
-              },
+              (result, _) => {
+                return {
+                  // me: result.login?.user,
+                  me: {
+                    ...result.login,
+                  },
+                };
+              }
             );
           },
         },

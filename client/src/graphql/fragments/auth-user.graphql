@@ -3,7 +3,8 @@ fragment authUser on User {
   username
   fullName
   email
-  avatar
   createdAt
   updatedAt
+  isActive
+  avatar
 }

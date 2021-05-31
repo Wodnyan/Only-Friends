@@ -25,7 +25,7 @@ export class Post {
   description: string;
 
   @Field(() => User)
-  @ManyToOne(() => User, (user) => user.articles)
+  @ManyToOne(() => User, (user) => user.posts)
   user: User;
 
   @Field()

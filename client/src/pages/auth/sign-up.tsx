@@ -28,10 +28,9 @@ export const SignUp: React.FC = () => {
   const history = useHistory();
   const resolver = useYupValidationResolver(registerSchema);
   const {
-    formState: { isValid, errors },
+    formState: { errors },
     register,
     handleSubmit,
-    setError,
   } = useForm<Inputs>({
     resolver,
   });
@@ -39,22 +38,13 @@ export const SignUp: React.FC = () => {
   const classes = useAuthStyles();
 
   const onSubmit = async (data: Inputs) => {
+    console.log(data);
     try {
       const response = await registerMutation(data);
-      // ERROR
-      if (response.data?.register.validationErrors) {
-        response.data?.register.validationErrors.forEach(
-          ({ message, field }: any) => {
-            setError(field, {
-              message,
-              type: "manual",
-            });
-          }
-        );
+      if (response.error) {
+        console.log(response.error);
       } else {
-        history.push(
-          `/verify-email?email=${response.data?.register.user?.email}`
-        );
+        history.push("/home");
       }
     } catch (error) {
       console.log(error);

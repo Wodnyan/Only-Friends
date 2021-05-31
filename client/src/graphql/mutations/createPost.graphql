@@ -1,11 +1,11 @@
 mutation CreatePost($title: String!, $description: String!) {
-  createPost(title: $title, description: $description) {
+  createPost(article: { title: $title, description: $description }) {
     id
     title
     description
     createdAt
     updatedAt
-    author {
+    user {
       ...authUser
     }
   }

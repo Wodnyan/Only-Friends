@@ -37,21 +37,16 @@ export const Login: React.FC = () => {
   const classes = useAuthStyles();
 
   const onSubmit = async (data: Inputs) => {
-    try {
-      const response = await loginMutation(data);
-      if (response.data?.login?.validationErrors) {
-        response.data?.login?.validationErrors.forEach(({ field, message }) => {
-          setError(field as "email" | "password", {
-            type: "manual",
-            message,
-          });
-        });
-      } else {
-        history.push("/home");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const response = await loginMutation(data);
+    //   if (response.error) {
+    //     console.log(response.error);
+    //   } else {
+    //     history.push("/home");
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (

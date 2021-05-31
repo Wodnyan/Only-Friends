@@ -8,7 +8,4 @@ export class InsertPostInput implements Partial<Post> {
 
   @Field()
   description: string;
-
-  @Field()
-  body: string;
 }

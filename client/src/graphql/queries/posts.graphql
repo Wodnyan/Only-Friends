@@ -3,10 +3,9 @@ query Posts {
     id
     title
     description
-    image
     createdAt
     updatedAt
-    author {
+    user {
       ...authUser
     }
   }

@@ -12,16 +12,14 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Box from "@material-ui/core/Box";
 import { Share, Favorite, MoreVert } from "@material-ui/icons";
 
-import { Post, User } from "../generated/graphql";
+import { AuthUserFragment, Post } from "../generated/graphql";
 import { format } from "timeago.js";
 
 interface Props {
   post: Pick<
     Post,
-    "id" | "title" | "description" | "image" | "createdAt" | "updatedAt"
-  > & {
-    author: User;
-  };
+    "id" | "title" | "description" | "createdAt" | "updatedAt"
+  > & { user: { __typename?: "User" } & AuthUserFragment };
 }
 
 export const PostCard: React.FC<Props> = ({ post }) => {
@@ -44,9 +42,7 @@ export const PostCard: React.FC<Props> = ({ post }) => {
     <Box mb={4}>
       <Card>
         <CardHeader
-          avatar={
-            <Avatar aria-label="recipe">{post.author.username[0]}</Avatar>
-          }
+          avatar={<Avatar aria-label="recipe">{post.user.username[0]}</Avatar>}
           action={
             <IconButton onClick={handleClickMore} aria-label="settings">
               <MoreVert />
