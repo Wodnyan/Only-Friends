@@ -5,17 +5,13 @@ mutation Register(
   $email: String!
 ) {
   register(
-    fullName: $fullName
-    username: $username
-    email: $email
-    password: $password
+    user: {
+      fullName: $fullName
+      username: $username
+      email: $email
+      password: $password
+    }
   ) {
-    user {
-      ...authUser
-    }
-    validationErrors {
-      field
-      message
-    }
+    ...authUser
   }
 }

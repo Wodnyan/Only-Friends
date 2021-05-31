@@ -1,5 +1,5 @@
 import { Link, useHistory } from "react-router-dom";
-import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
+import { useMeQuery } from "../../generated/graphql";
 
 import MaterialLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
@@ -30,14 +30,14 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const NavBar = () => {
-  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
+  // const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
   const history = useHistory();
   const classes = useStyles();
   const [{ data, fetching }] = useMeQuery();
   let navList = null;
 
   const handleLogout = async () => {
-    await logout();
+    // await logout();
     history.push("/");
   };
 
@@ -49,7 +49,7 @@ export const NavBar = () => {
       <div className={classes.navList}>
         <h1>{data.me.username}</h1>{" "}
         <Button onClick={handleLogout} variant="contained">
-          {logoutFetching ? <CircularProgress /> : "Logout"}
+          Logout
         </Button>
       </div>
     );
