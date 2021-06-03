@@ -41,19 +41,20 @@ export const NavBar = () => {
     history.push("/");
   };
 
-  // Loading
   if (fetching) {
-    // User not logged in
   } else if (data?.me) {
     navList = (
-      <div className={classes.navList}>
-        <h1>{data.me.username}</h1>{" "}
-        <Button onClick={handleLogout} variant="contained">
-          Logout
-        </Button>
-      </div>
+      <ul className={classes.navList}>
+        <li>
+          <h1>{data.me.username}</h1>
+        </li>
+        <li>
+          <Button onClick={handleLogout} variant="contained">
+            Logout
+          </Button>
+        </li>
+      </ul>
     );
-    // User logged in
   } else {
     navList = (
       <ul className={classes.navList}>
