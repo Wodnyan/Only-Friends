@@ -22,6 +22,7 @@ function customUpdateQuery<Result, Query>(
   return cache.updateQuery(qi, (data) => fn(result, data as any) as any);
 }
 
+// TODO: Put this in a different file
 const client = createClient({
   url: "http://localhost:5050/graphql",
   fetchOptions: {
