@@ -11,6 +11,7 @@ import cors from "cors";
 import redisStore from "connect-redis";
 import redis from "redis";
 import { PostResolver } from "./resolvers/PostResolver";
+import { UserResolver } from "./resolvers/UserResolver";
 
 dotenv.config();
 
@@ -52,7 +53,7 @@ dotenv.config();
 
   const server = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [AuthResolver, PostResolver],
+      resolvers: [AuthResolver, PostResolver, UserResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
