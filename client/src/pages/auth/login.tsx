@@ -12,41 +12,41 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 // import { useLoginMutation } from "../../generated/graphql";
 
 import { useAuthStyles } from "../../styles/pages/auth";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { PasswordInput } from "../../components/PasswordInput";
 import { loginSchema } from "../../utils/validators/user";
 import { useYupValidationResolver } from "../../utils/validators/";
+import { useLoginMutation } from "../../generated/graphql";
 
 interface Inputs {
-  email: string;
+  username: string;
   password: string;
 }
 
 export const Login: React.FC = () => {
-  // const history = useHistory();
+  const history = useHistory();
   const resolver = useYupValidationResolver(loginSchema);
   const {
     formState: { errors },
     register,
     handleSubmit,
-    // setError,
   } = useForm<Inputs>({
     resolver,
   });
-  // const [, loginMutation] = useLoginMutation();
+  const [, loginMutation] = useLoginMutation();
   const classes = useAuthStyles();
 
   const onSubmit = async (data: Inputs) => {
-    // try {
-    //   const response = await loginMutation(data);
-    //   if (response.error) {
-    //     console.log(response.error);
-    //   } else {
-    //     history.push("/home");
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const response = await loginMutation(data);
+      if (response.error) {
+        console.log(response.error.message);
+      } else {
+        history.push("/home");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -67,10 +67,10 @@ export const Login: React.FC = () => {
         <TextField
           fullWidth
           id="outlined-basic"
-          label="Email"
+          label="Username"
           variant="outlined"
           className={classes.input}
-          {...register("email")}
+          {...register("username")}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -78,8 +78,8 @@ export const Login: React.FC = () => {
               </InputAdornment>
             ),
           }}
-          error={Boolean(errors?.email)}
-          helperText={errors.email?.message}
+          error={Boolean(errors?.username)}
+          helperText={errors.username?.message}
         />
         <PasswordInput
           error={errors?.password?.message}
