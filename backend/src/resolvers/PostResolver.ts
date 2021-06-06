@@ -11,7 +11,7 @@ export class PostResolver {
     return postController.getAll();
   }
 
-  @Query(() => Post)
+  @Query(() => Post, { nullable: true })
   public async post(@Arg("id") id: string): Promise<Post | null> {
     return (await postController.getOne(id)) || null;
   }
