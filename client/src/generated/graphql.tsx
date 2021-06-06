@@ -55,6 +55,12 @@ export type MutationCreatePostArgs = {
   post: InsertPostInput;
 };
 
+export type OptionsInput = {
+  limit?: Maybe<Scalars['Float']>;
+  offset?: Maybe<Scalars['Float']>;
+  order?: Maybe<Scalars['String']>;
+};
+
 export type Post = {
   __typename?: 'Post';
   id: Scalars['String'];
@@ -69,12 +75,19 @@ export type Query = {
   __typename?: 'Query';
   me?: Maybe<User>;
   posts: Array<Post>;
-  post: Post;
+  post?: Maybe<Post>;
+  users: Array<User>;
 };
 
 
 export type QueryPostArgs = {
   id: Scalars['String'];
+};
+
+
+export type QueryUsersArgs = {
+  options?: Maybe<OptionsInput>;
+  username?: Maybe<Scalars['String']>;
 };
 
 export type RegisterUserInput = {
@@ -176,6 +189,20 @@ export type PostsQuery = (
   )> }
 );
 
+export type UsersQueryVariables = Exact<{
+  username: Scalars['String'];
+  options?: Maybe<OptionsInput>;
+}>;
+
+
+export type UsersQuery = (
+  { __typename?: 'Query' }
+  & { users: Array<(
+    { __typename?: 'User' }
+    & AuthUserFragment
+  )> }
+);
+
 export const AuthUserFragmentDoc = gql`
     fragment authUser on User {
   id
@@ -258,4 +285,15 @@ export const PostsDocument = gql`
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });
+};
+export const UsersDocument = gql`
+    query Users($username: String!, $options: OptionsInput) {
+  users(username: $username, options: $options) {
+    ...authUser
+  }
+}
+    ${AuthUserFragmentDoc}`;
+
+export function useUsersQuery(options: Omit<Urql.UseQueryArgs<UsersQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<UsersQuery>({ query: UsersDocument, ...options });
 };
