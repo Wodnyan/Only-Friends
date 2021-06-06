@@ -22,7 +22,7 @@ interface Props {
 
 export const HomepageLayout: React.FC<Props> = ({
   children,
-  guest = true,
+  guest,
   leftPanel = <h1>Left Panel</h1>,
   rightPanel = <h1>Right Panel</h1>,
 }) => {
@@ -48,6 +48,7 @@ export const HomepageLayout: React.FC<Props> = ({
       return (
         <Grid container>
           <Grid item xs={8}>
+            {!guest && <CreatePost full={false} />}
             {children}
           </Grid>
           <Grid item xs={4}>
@@ -59,6 +60,7 @@ export const HomepageLayout: React.FC<Props> = ({
       return (
         <Grid container>
           <Grid item xs={12}>
+            {!guest && <CreatePost full={false} />}
             {children}
           </Grid>
         </Grid>

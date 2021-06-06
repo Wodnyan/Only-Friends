@@ -1,0 +1,5 @@
+query Users($username: String!, $options: OptionsInput) {
+  users(username: $username, options: $options) {
+    ...authUser
+  }
+}

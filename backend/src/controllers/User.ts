@@ -1,5 +1,6 @@
-import { getRepository } from "typeorm";
+import { FindConditions, getRepository, ObjectLiteral } from "typeorm";
 import { User } from "../entity/UserEntity";
+import { Order, Pagination } from "../types";
 
 type InsertPayload = {
   username: string;
@@ -15,8 +16,19 @@ type UserUpdate = {
   avatar?: string;
 };
 
+type GetAllOptions = {
+  pagination?: Pagination;
+  order?: Order;
+  where?:
+    | string
+    | ObjectLiteral
+    | FindConditions<User>
+    | FindConditions<User>[]
+    | undefined;
+};
+
 interface UserControllerInterface {
-  getAll(): Promise<User[]>;
+  getAll(options?: GetAllOptions): Promise<User[]>;
 
   getOne(id: string): Promise<User | undefined>;
 
@@ -28,8 +40,15 @@ interface UserControllerInterface {
 }
 
 export class UserController implements UserControllerInterface {
-  getAll() {
-    return getRepository(User).find();
+  getAll(options?: GetAllOptions) {
+    return getRepository(User).find({
+      take: options?.pagination?.limit || 100,
+      skip: options?.pagination?.offset,
+      order: {
+        createdAt: options?.order,
+      },
+      where: options?.where,
+    });
   }
 
   getOne(id: string) {
