@@ -9,8 +9,8 @@ import { OptionsInput } from "../inputs/OptionsInputs";
 export class UserResolver {
   @Query(() => [User])
   users(
-    @Arg("username") username: string,
     @Ctx() { req }: ApolloContext,
+    @Arg("username", { nullable: true }) username?: string,
     @Arg("options", { nullable: true }) options?: OptionsInput
   ): Promise<[] | User[]> {
     if (!(req.session as any).userId) {
@@ -18,7 +18,7 @@ export class UserResolver {
     }
     return userController.getAll({
       where: {
-        username: Like(`${username}%`),
+        username: Like(`${username || ""}%`),
       },
       order: options?.order,
       pagination: {
