@@ -17,7 +17,7 @@ export class UserResolver {
   ): Promise<[] | User[]> {
     return userController.getAll({
       where: {
-        username: Like(`%${username || ""}%`),
+        username: Like(`${username || ""}%`),
       },
       order: options?.order,
       pagination: {
