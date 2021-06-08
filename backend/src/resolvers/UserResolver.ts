@@ -26,4 +26,10 @@ export class UserResolver {
       },
     });
   }
+
+  @UseMiddleware(Authenticate)
+  @Query(() => User)
+  async user(@Arg("id") userId: string) {
+    return await userController.getOne(userId);
+  }
 }
