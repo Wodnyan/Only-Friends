@@ -1,24 +1,23 @@
-import { Arg, Ctx, Query, Resolver } from "type-graphql";
+import { Arg, Query, Resolver, UseMiddleware } from "type-graphql";
 import { User } from "../entity/UserEntity";
-import { ApolloContext } from "../types";
+// import { ApolloContext } from "../types";
 import userController from "../controllers/User";
 import { Like } from "typeorm";
 import { OptionsInput } from "../inputs/OptionsInputs";
+import { Authenticate } from "../middlewares/graphql/authenticate";
 
 @Resolver()
 export class UserResolver {
+  @UseMiddleware(Authenticate)
   @Query(() => [User])
   users(
-    @Ctx() { req }: ApolloContext,
+    // @Ctx() { req }: ApolloContext,
     @Arg("username", { nullable: true }) username?: string,
     @Arg("options", { nullable: true }) options?: OptionsInput
   ): Promise<[] | User[]> {
-    if (!(req.session as any).userId) {
-      throw new Error("Unauthenticated");
-    }
     return userController.getAll({
       where: {
-        username: Like(`%${username || ""}%`),
+        username: Like(`${username || ""}%`),
       },
       order: options?.order,
       pagination: {

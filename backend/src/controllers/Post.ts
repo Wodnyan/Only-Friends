@@ -1,5 +1,6 @@
-import { getRepository } from "typeorm";
+import { FindConditions, getRepository, ObjectLiteral } from "typeorm";
 import { Post } from "../entity/PostEntity";
+import { Pagination, Order } from "../types";
 
 type InsertArticlePayload = {
   title: string;
@@ -7,10 +8,27 @@ type InsertArticlePayload = {
   userId: string;
 };
 
+type GetAllOptions = {
+  pagination?: Pagination;
+  order?: Order;
+  where?:
+    | string
+    | ObjectLiteral
+    | FindConditions<Post>
+    | FindConditions<Post>[]
+    | undefined;
+};
+
 class PostController {
-  getAll(): Promise<Post[] | []> {
+  getAll(options?: GetAllOptions): Promise<Post[] | []> {
     return getRepository(Post).find({
       relations: ["user"],
+      take: options?.pagination?.limit || 100,
+      skip: options?.pagination?.offset,
+      order: {
+        createdAt: options?.order,
+      },
+      where: options?.where,
     });
   }
 
@@ -32,9 +50,7 @@ class PostController {
         id: payload.userId,
       },
     });
-    const post = await getRepository(Post).findOne(generated.id, {
-      relations: ["user"],
-    });
+    const post = await this.getOne(generated.id);
     return post!;
   }
 

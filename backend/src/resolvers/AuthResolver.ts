@@ -1,7 +1,15 @@
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from "type-graphql";
 import userController from "../controllers/User";
 import { User } from "../entity/UserEntity";
 import { LoginUserInput, RegisterUserInput } from "../inputs/UserInputs";
+import { Authenticate } from "../middlewares/graphql/authenticate";
 import { ApolloContext } from "../types";
 import { hash } from "../utils/hash";
 
@@ -33,6 +41,7 @@ export class AuthResolver {
   }
   // Logout
   // Me
+  @UseMiddleware(Authenticate)
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req }: ApolloContext): Promise<User | null> {
     return (await userController.getOne((req.session as any).userId)) || null;
