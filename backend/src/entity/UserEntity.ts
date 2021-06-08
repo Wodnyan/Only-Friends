@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Follower } from "./FollowerEntity";
 import { Post } from "./PostEntity";
 
 @Entity()
@@ -28,7 +29,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @Field()
@@ -50,4 +51,8 @@ export class User {
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @Field(() => [User])
+  @OneToMany(() => Follower, (user) => user.following)
+  following: User[];
 }

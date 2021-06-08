@@ -12,6 +12,7 @@ import redisStore from "connect-redis";
 import redis from "redis";
 import { PostResolver } from "./resolvers/PostResolver";
 import { UserResolver } from "./resolvers/UserResolver";
+import { FollowerResolver } from "./resolvers/FollowerResolver";
 
 dotenv.config();
 
@@ -53,7 +54,7 @@ dotenv.config();
 
   const server = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [AuthResolver, PostResolver, UserResolver],
+      resolvers: [AuthResolver, PostResolver, UserResolver, FollowerResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({
