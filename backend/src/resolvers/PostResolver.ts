@@ -8,6 +8,7 @@ import {
 } from "type-graphql";
 import { postController } from "../controllers/Post";
 import { Post } from "../entity/PostEntity";
+import { OptionsInput } from "../inputs/OptionsInputs";
 import { InsertPostInput } from "../inputs/PostInputs";
 import { Authenticate } from "../middlewares/graphql/authenticate";
 import { ApolloContext } from "../types";
@@ -15,8 +16,18 @@ import { ApolloContext } from "../types";
 @Resolver()
 export class PostResolver {
   @Query(() => [Post])
-  public async posts(): Promise<Post[] | []> {
-    return postController.getAll();
+  public async posts(
+    @Arg("following", { nullable: true }) following?: boolean,
+    @Arg("options", { nullable: true }) options?: OptionsInput
+  ): Promise<Post[] | []> {
+    console.log(following);
+    return await postController.getAll({
+      order: options?.order,
+      pagination: {
+        limit: options?.limit,
+        offset: options?.offset,
+      },
+    });
   }
 
   @Query(() => Post, { nullable: true })
