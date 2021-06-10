@@ -2,7 +2,7 @@ import React from "react";
 // import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 import { useScreenType } from "../hooks/useScreenType";
-import { CreatePost } from "./CreatePost";
+import { CreatePost } from "../components/CreatePost";
 
 // const useStyles = makeStyles((theme: Theme) =>
 //   createStyles({
