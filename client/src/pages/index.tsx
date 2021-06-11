@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { NavBar } from "../components/nav/Navbar";
+import { Navbar } from "../components/nav/Navbar";
 import { useMeQuery } from "../generated/graphql";
 
 import Button from "@material-ui/core/Button";
@@ -70,7 +70,7 @@ export const LandingPage: React.FC = () => {
   }
   return (
     <div className={classes.root}>
-      <NavBar />
+      <Navbar />
       <main className={classes.main}>{body}</main>
     </div>
   );

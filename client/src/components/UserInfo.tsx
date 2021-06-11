@@ -15,32 +15,35 @@ interface Props {
   };
   full?: boolean;
   loading: boolean;
+  paper?: boolean;
 }
 
-export const UserInfo: React.FC<Props> = ({ user, full, loading }) => {
-  const mainInfo = loading ? (
-    <>
-      <Avatar>
-        <Skeleton width={45} height={45} variant="circle" />
-      </Avatar>
-      <Typography>
-        <Skeleton />
-      </Typography>
-      <UserHandler loading={true} handler={user?.handle} />
-    </>
-  ) : (
-    <>
-      <Avatar src={user?.avatar}>
-        {!user?.avatar ? user!.username[0] : ""}
-      </Avatar>
-      <Typography>{user?.username}</Typography>
-      <UserHandler loading={loading} handler={user?.handle} />
-    </>
-  );
+export const UserInfo: React.FC<Props> = ({ user, full, loading, paper }) => {
+  const UsePaper = paper ? Paper : React.Fragment;
+  const mainInfo =
+    loading || !user ? (
+      <>
+        <Avatar>
+          <Skeleton width={45} height={45} variant="circle" />
+        </Avatar>
+        <Typography>
+          <Skeleton />
+        </Typography>
+        <UserHandler loading={true} handler={user?.handle} />
+      </>
+    ) : (
+      <>
+        <Avatar src={user?.avatar}>
+          {!user?.avatar ? user!.username[0] : ""}
+        </Avatar>
+        <Typography>{user?.username}</Typography>
+        <UserHandler loading={loading} handler={user?.handle} />
+      </>
+    );
 
   if (full) {
     return (
-      <Paper>
+      <UsePaper>
         <Box p={3}>
           {mainInfo}
           <Box display="flex">
@@ -58,8 +61,12 @@ export const UserInfo: React.FC<Props> = ({ user, full, loading }) => {
             )}
           </Box>
         </Box>
-      </Paper>
+      </UsePaper>
     );
   }
-  return <Box>{mainInfo}</Box>;
+  return (
+    <UsePaper>
+      <Box>{mainInfo}</Box>
+    </UsePaper>
+  );
 };
