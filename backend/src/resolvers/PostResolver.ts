@@ -18,15 +18,25 @@ export class PostResolver {
   @Query(() => [Post])
   public async posts(
     @Arg("following", { nullable: true }) following?: boolean,
-    @Arg("options", { nullable: true }) options?: OptionsInput
+    @Arg("options", { nullable: true }) options?: OptionsInput,
+    @Arg("userId", { nullable: true }) userId?: string
   ): Promise<Post[] | []> {
     console.log(following);
+    console.log(userId);
+    console.log("HELLO WORLD");
     return await postController.getAll({
       order: options?.order,
       pagination: {
         limit: options?.limit,
         offset: options?.offset,
       },
+      where: userId
+        ? {
+            user: {
+              id: userId || null,
+            },
+          }
+        : undefined,
     });
   }
 
