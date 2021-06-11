@@ -1,5 +1,5 @@
-query Posts {
-  posts {
+query Posts($userId: String, $options: OptionsInput) {
+  posts(userId: $userId, options: $options) {
     id
     title
     description

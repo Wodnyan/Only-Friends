@@ -2,8 +2,8 @@ import Box from "@material-ui/core/Box";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
-import { HomepageLayout } from "../../components/HomepageLayout";
-import { NavBar } from "../../components/nav/Navbar";
+import { HomepageLayout } from "../../layouts/HomepageLayout";
+import { Navbar } from "../../components/nav/Navbar";
 import { PostCard } from "../../components/PostCard";
 import { Searchbar } from "../../components/Searchbar";
 import { UserInfo } from "../../components/UserInfo";
@@ -43,7 +43,7 @@ export const HomePage: React.FC = () => {
 
   return (
     <>
-      <NavBar />
+      <Navbar />
       <div className={classes.container}>
         <HomepageLayout
           rightPanel={

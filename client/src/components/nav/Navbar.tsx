@@ -29,8 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const NavBar = () => {
-  // const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
+export const Navbar = () => {
   const history = useHistory();
   const classes = useStyles();
   const [{ data, fetching }] = useMeQuery();
@@ -46,7 +45,14 @@ export const NavBar = () => {
     navList = (
       <ul className={classes.navList}>
         <li>
-          <h1>{data.me.username}</h1>
+          <MaterialLink to="/home" component={Link}>
+            Home
+          </MaterialLink>
+        </li>
+        <li>
+          <MaterialLink to={`/users/${data.me.id}`} component={Link}>
+            {data.me.username}
+          </MaterialLink>
         </li>
         <li>
           <Button onClick={handleLogout} variant="contained">

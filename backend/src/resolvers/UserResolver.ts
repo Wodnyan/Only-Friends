@@ -1,6 +1,5 @@
 import { Arg, Query, Resolver, UseMiddleware } from "type-graphql";
 import { User } from "../entity/UserEntity";
-// import { ApolloContext } from "../types";
 import userController from "../controllers/User";
 import { Like } from "typeorm";
 import { OptionsInput } from "../inputs/OptionsInputs";
@@ -10,12 +9,11 @@ import { Authenticate } from "../middlewares/graphql/authenticate";
 export class UserResolver {
   @UseMiddleware(Authenticate)
   @Query(() => [User])
-  users(
-    // @Ctx() { req }: ApolloContext,
+  async users(
     @Arg("username", { nullable: true }) username?: string,
     @Arg("options", { nullable: true }) options?: OptionsInput
   ): Promise<[] | User[]> {
-    return userController.getAll({
+    return await userController.getAll({
       where: {
         username: Like(`${username || ""}%`),
       },
@@ -26,10 +24,9 @@ export class UserResolver {
       },
     });
   }
-
   @UseMiddleware(Authenticate)
-  @Query(() => User)
-  async user(@Arg("id") userId: string) {
-    return await userController.getOne(userId);
+  @Query(() => User, { nullable: true })
+  async user(@Arg("id") userId: string): Promise<User | null> {
+    return (await userController.getOne(userId)) || null;
   }
 }
