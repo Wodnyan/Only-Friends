@@ -12,7 +12,7 @@ import React, { ChangeEvent, useState } from "react";
 import { useHistory } from "react-router";
 import { useUsersQuery, User } from "../generated/graphql";
 
-type UserType = Omit<User, "posts">;
+type UserType = Omit<User, "posts" | "following">;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,7 +33,7 @@ export const Searchbar: React.FC<{}> = () => {
   const classes = useStyles();
   const [searchResults, setSearchResults] = useState<UserType[] | []>([]);
   const [search, setSearch] = useState("");
-  const [{ data, fetching }, reexecute] = useUsersQuery({
+  const [{ data }] = useUsersQuery({
     variables: {
       username: search,
       options: {
