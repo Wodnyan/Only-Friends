@@ -23,7 +23,6 @@ interface Props {
 }
 
 export const PostCard: React.FC<Props> = ({ post }) => {
-  // const [] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClickMore = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -49,7 +48,7 @@ export const PostCard: React.FC<Props> = ({ post }) => {
             </IconButton>
           }
           title={post.title}
-          subheader={format(post.createdAt)}
+          subheader={format(new Date(post.createdAt))}
         />
         <Menu
           id="simple-menu"
