@@ -7,7 +7,6 @@ import { useParams } from "react-router";
 import { Navbar } from "../../components/nav/Navbar";
 import { PostCard } from "../../components/PostCard";
 import { UserHandler } from "../../components/UserHandler";
-import { UserInfo } from "../../components/UserInfo";
 import { usePostsQuery, useUserQuery } from "../../generated/graphql";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,15 +41,17 @@ const UserPage: React.FC<{}> = () => {
   const [{ data: postsData }] = usePostsQuery({
     variables: {
       userId: params.userId,
+      options: {
+        order: "DESC",
+      },
     },
+    requestPolicy: "cache-and-network",
   });
-  const [{ data: userData, fetching: userDataFetching }] = useUserQuery({
+  const [{ data: userData }] = useUserQuery({
     variables: {
       id: params.userId,
     },
   });
-
-  console.log(userData, params.userId, userDataFetching);
 
   const user = userData?.user
     ? {
@@ -64,8 +65,6 @@ const UserPage: React.FC<{}> = () => {
     <>
       <Navbar />
       <div className={styles.container}>
-        <UserInfo loading={userDataFetching} paper user={user} />
-        <UserInfo loading={userDataFetching} paper full user={user} />
         <Paper className={styles.user}>
           <Avatar className={styles.avatar} src={userData?.user?.avatar}>
             {userData?.user?.avatar ? "" : userData?.user?.username[0]}
