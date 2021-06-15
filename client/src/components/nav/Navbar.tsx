@@ -1,5 +1,5 @@
 import { Link, useHistory } from "react-router-dom";
-import { useMeQuery } from "../../generated/graphql";
+import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
 
 import MaterialLink from "@material-ui/core/Link";
 import Typography from "@material-ui/core/Typography";
@@ -33,15 +33,18 @@ export const Navbar = () => {
   const history = useHistory();
   const classes = useStyles();
   const [{ data, fetching }] = useMeQuery();
+  const [, logout] = useLogoutMutation();
   let navList = null;
 
   const handleLogout = async () => {
-    // await logout();
-    history.push("/");
+    const { data } = await logout();
+
+    if (data?.logout) {
+      history.push("/");
+    }
   };
 
-  if (fetching) {
-  } else if (data?.me) {
+  if (data?.me) {
     navList = (
       <ul className={classes.navList}>
         <li>
@@ -62,20 +65,7 @@ export const Navbar = () => {
       </ul>
     );
   } else {
-    navList = (
-      <ul className={classes.navList}>
-        <li>
-          <MaterialLink to="/auth/sign-up" component={Link}>
-            Sign Up
-          </MaterialLink>
-        </li>
-        <li>
-          <MaterialLink to="/auth/login" component={Link}>
-            Login
-          </MaterialLink>
-        </li>
-      </ul>
-    );
+    navList = null;
   }
 
   return (

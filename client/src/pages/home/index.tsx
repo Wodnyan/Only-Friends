@@ -12,6 +12,7 @@ import {
   useMeQuery,
   usePostsQuery,
 } from "../../generated/graphql";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,12 +27,9 @@ export const HomePage: React.FC = () => {
   const classes = useStyles();
   const [{ data, fetching }] = usePostsQuery();
   const [{ data: userData, fetching: userDataFetching }] = useMeQuery();
+  const history = useHistory();
 
   let body = null;
-
-  if (!userData?.me && !userDataFetching) {
-    return null;
-  }
 
   if (!data && !fetching) {
     body = <Typography>It seems like you follow nobody</Typography>;
@@ -39,6 +37,10 @@ export const HomePage: React.FC = () => {
     body = <Typography>Loading...</Typography>;
   } else {
     body = data!.posts.map((post) => <PostCard key={post.id} post={post} />);
+  }
+
+  if (!userData?.me && !userDataFetching) {
+    history.push("/");
   }
 
   return (
@@ -77,6 +79,7 @@ export const RightPanel: React.FC<{
       <UserInfo
         loading={user.loading}
         full
+        paper
         user={{
           avatar: user.user.avatar,
           handle: user.user.username,

@@ -40,7 +40,8 @@ export const Login: React.FC = () => {
     try {
       const response = await loginMutation(data);
       if (response.error) {
-        console.log(response.error.message);
+        console.log(response.error.graphQLErrors[0].message);
+        console.log(response.error);
       } else {
         history.push("/home");
       }

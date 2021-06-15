@@ -7,6 +7,7 @@ import { Routing } from "./routing";
 import {
   CreatePostMutation,
   LoginMutation,
+  LogoutMutation,
   MeDocument,
   MeQuery,
   PostsDocument,
@@ -33,16 +34,16 @@ const client = createClient({
     cacheExchange({
       updates: {
         Mutation: {
-          // logout: (result, _args, cache, _info) => {
-          //   customUpdateQuery<LogoutMutation, MeQuery>(
-          //     cache,
-          //     {
-          //       query: MeDocument,
-          //     },
-          //     result,
-          //     () => ({ me: null })
-          //   );
-          // },
+          logout: (result, _args, cache, _info) => {
+            customUpdateQuery<LogoutMutation, MeQuery>(
+              cache,
+              {
+                query: MeDocument,
+              },
+              result,
+              () => ({ me: null })
+            );
+          },
           createPost: (result, _args, cache, _info) => {
             customUpdateQuery<CreatePostMutation, PostsQuery>(
               cache,
