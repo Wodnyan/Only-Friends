@@ -40,6 +40,19 @@ export class AuthResolver {
     return user;
   }
   // Logout
+  @UseMiddleware(Authenticate)
+  @Mutation(() => Boolean)
+  async logout(@Ctx() { req }: ApolloContext): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      req.session.destroy((err) => {
+        if (err) {
+          reject(false);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  }
   // Me
   @UseMiddleware(Authenticate)
   @Query(() => User, { nullable: true })

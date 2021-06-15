@@ -27,11 +27,9 @@ export const HomePage: React.FC = () => {
   const [{ data, fetching }] = usePostsQuery();
   const [{ data: userData, fetching: userDataFetching }] = useMeQuery();
 
-  let body = null;
+  console.log(data?.posts);
 
-  if (!userData?.me && !userDataFetching) {
-    return null;
-  }
+  let body = null;
 
   if (!data && !fetching) {
     body = <Typography>It seems like you follow nobody</Typography>;
@@ -77,6 +75,7 @@ export const RightPanel: React.FC<{
       <UserInfo
         loading={user.loading}
         full
+        paper
         user={{
           avatar: user.user.avatar,
           handle: user.user.username,

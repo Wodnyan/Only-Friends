@@ -43,9 +43,9 @@ export const LandingPage: React.FC = () => {
           Welcome to OnlyFriends
         </Typography>
         <Box className={classes.choiceContainer}>
-          <Link to="/explore">
-            <Button variant="contained" color="primary">
-              Explore as Guest
+          <Link to="/auth/login">
+            <Button variant="outlined" color="primary">
+              Login
             </Button>
           </Link>
           <Link to="/auth/sign-up">
