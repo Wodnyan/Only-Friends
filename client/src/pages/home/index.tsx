@@ -12,6 +12,7 @@ import {
   useMeQuery,
   usePostsQuery,
 } from "../../generated/graphql";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,8 +27,7 @@ export const HomePage: React.FC = () => {
   const classes = useStyles();
   const [{ data, fetching }] = usePostsQuery();
   const [{ data: userData, fetching: userDataFetching }] = useMeQuery();
-
-  console.log(data?.posts);
+  const history = useHistory();
 
   let body = null;
 
@@ -37,6 +37,10 @@ export const HomePage: React.FC = () => {
     body = <Typography>Loading...</Typography>;
   } else {
     body = data!.posts.map((post) => <PostCard key={post.id} post={post} />);
+  }
+
+  if (!userData?.me && !userDataFetching) {
+    history.push("/");
   }
 
   return (
