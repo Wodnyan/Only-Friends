@@ -16,7 +16,7 @@ export class FollowerResolver {
   @UseMiddleware(Authenticate)
   @Query(() => [User])
   async followers(@Ctx() { req }: ApolloContext) {
-    const { userId } = req.session as any;
+    const { userId } = req.session;
     const followers = await followerController.getAllFollowers(userId);
     return followers.map((follower) => follower.follower);
   }
@@ -24,7 +24,7 @@ export class FollowerResolver {
   @UseMiddleware(Authenticate)
   @Query(() => [User])
   async following(@Ctx() { req }: ApolloContext) {
-    const { userId } = req.session as any;
+    const { userId } = req.session;
     const following = await followerController.getAllFollowing(userId);
     return following.map((following) => following.following);
   }
@@ -35,7 +35,7 @@ export class FollowerResolver {
     @Ctx() { req }: ApolloContext,
     @Arg("followingId") followingId: string
   ) {
-    const { userId } = req.session as any;
+    const { userId } = req.session;
     const follow = await followerController.follow(userId, followingId);
     return follow;
   }
@@ -46,7 +46,7 @@ export class FollowerResolver {
     @Ctx() { req }: ApolloContext,
     @Arg("followingId") followingId: string
   ) {
-    const { userId } = req.session as any;
+    const { userId } = req.session;
     const unfollow = await followerController.unfollow(userId, followingId);
     return unfollow;
   }

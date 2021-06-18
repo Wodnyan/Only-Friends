@@ -35,7 +35,7 @@ export class AuthResolver {
       throw new Error("Incorrect password");
     }
 
-    (req.session as any).userId = user.id;
+    req.session.userId = user.id;
 
     return user;
   }
@@ -57,7 +57,7 @@ export class AuthResolver {
   @UseMiddleware(Authenticate)
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req }: ApolloContext): Promise<User | null> {
-    return (await userController.getOne((req.session as any).userId)) || null;
+    return (await userController.getOne(req.session.userId)) || null;
   }
   // Register
   @Mutation(() => User)
@@ -70,7 +70,7 @@ export class AuthResolver {
       ...userInput,
       password: hashedPassword,
     });
-    (req.session as any).userId = user.id;
+    req.session.userId = user.id;
     return user;
   }
 }
