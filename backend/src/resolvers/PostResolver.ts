@@ -15,15 +15,41 @@ import { ApolloContext } from "../types";
 
 @Resolver()
 export class PostResolver {
+  /*
+   * If following is true and user is authenticated
+   * than respond with only the posts of users which
+   * the user follows
+   *
+   */
+  @UseMiddleware(Authenticate)
+  @Query(() => [Post])
+  public async followingPosts(
+    @Ctx() { req }: ApolloContext,
+    @Arg("options", { nullable: true }) options?: OptionsInput,
+    @Arg("userId", { nullable: true }) userId?: string
+  ) {
+    console.log(req.session.userId);
+    return await postController.getAll({
+      order: options?.order,
+      pagination: {
+        limit: options?.limit,
+        offset: options?.offset,
+      },
+      where: userId
+        ? {
+            user: {
+              id: userId || null,
+            },
+          }
+        : undefined,
+    });
+  }
+
   @Query(() => [Post])
   public async posts(
-    @Arg("following", { nullable: true }) following?: boolean,
     @Arg("options", { nullable: true }) options?: OptionsInput,
     @Arg("userId", { nullable: true }) userId?: string
   ): Promise<Post[] | []> {
-    console.log(following);
-    console.log(userId);
-    console.log("HELLO WORLD");
     return await postController.getAll({
       order: options?.order,
       pagination: {
@@ -51,10 +77,7 @@ export class PostResolver {
     @Arg("id") id: string,
     @Ctx() { req }: ApolloContext
   ) {
-    const deleted = await postController.delete(
-      id,
-      (req.session as any).userId
-    );
+    const deleted = await postController.delete(id, req.session.userId);
     return Boolean(deleted);
   }
 
@@ -66,7 +89,7 @@ export class PostResolver {
   ): Promise<Post | null> {
     return postController.insert({
       ...post,
-      userId: (req.session as any).userId,
+      userId: req.session.userId,
     });
   }
 }
